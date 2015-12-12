@@ -9,8 +9,8 @@ import io.github.hsyyid.ultimategames.UltimateGames;
 import io.github.hsyyid.ultimategames.arenas.DeathmatchArena;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.service.scheduler.SchedulerService;
-import org.spongepowered.api.service.scheduler.Task;
+import org.spongepowered.api.scheduler.Scheduler;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -99,7 +99,7 @@ public class DeathmatchMinigame implements Minigame
 				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GOLD, "May the games begin!"));
 			}
 
-			SchedulerService scheduler = UltimateGames.game.getScheduler();
+			Scheduler scheduler = UltimateGames.game.getScheduler();
 			Task.Builder taskBuilder = scheduler.createTaskBuilder();
 
 			taskBuilder.execute(() -> {

@@ -8,7 +8,6 @@ import com.google.inject.Inject;
 import io.github.hsyyid.ultimategames.commands.UltimateGamesExecutor;
 import io.github.hsyyid.ultimategames.commands.arena.CreateArenaExecutor;
 import io.github.hsyyid.ultimategames.commands.arena.SetTeamSpawnExecutor;
-import io.github.hsyyid.ultimategames.commands.minigame.StartMinigameExecutor;
 import io.github.hsyyid.ultimategames.listeners.InteractBlockListener;
 import io.github.hsyyid.ultimategames.listeners.SignChangeListener;
 import io.github.hsyyid.ultimategames.utils.ConfigManager;
@@ -18,15 +17,15 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppedServerEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.service.config.DefaultConfig;
 import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.util.command.args.GenericArguments;
-import org.spongepowered.api.util.command.spec.CommandSpec;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,16 +103,6 @@ public class UltimateGames
 			.executor(new SetTeamSpawnExecutor())
 			.build());
 
-		subcommands.put(Arrays.asList("start"), CommandSpec.builder()
-			.description(Texts.of("Start Minigame Command"))
-			.permission("ultimategames.minigame.start")
-			.arguments(GenericArguments.seq(
-				GenericArguments.onlyOne(GenericArguments.string(Texts.of("arena"))),
-					GenericArguments.onlyOne(GenericArguments.player(Texts.of("p1"), game)),
-					GenericArguments.onlyOne(GenericArguments.player(Texts.of("p2"), game))))
-			.executor(new StartMinigameExecutor())
-			.build());
-
 		CommandSpec ultimateGamesCommandSpec = CommandSpec.builder()
 			.description(Texts.of("Ultimate Games Command"))
 			.permission("ultimategames.use")
@@ -121,7 +110,7 @@ public class UltimateGames
 			.children(subcommands)
 			.build();
 
-		game.getCommandDispatcher().register(this, ultimateGamesCommandSpec, "ultimategames", "ug");
+		game.getCommandManager().register(this, ultimateGamesCommandSpec, "ultimategames", "ug");
 		
 		game.getEventManager().registerListeners(this, new InteractBlockListener());
 		game.getEventManager().registerListeners(this, new SignChangeListener());

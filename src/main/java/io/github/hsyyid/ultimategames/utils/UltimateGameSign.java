@@ -21,6 +21,8 @@ public class UltimateGameSign
 	{
 		this.location = location;
 		this.arena = arena;
+		this.teamA = Lists.newArrayList();
+		this.teamB = Lists.newArrayList();
 	}
 	
 	public Arena getArena()
