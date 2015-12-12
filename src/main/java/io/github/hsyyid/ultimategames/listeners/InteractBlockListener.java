@@ -50,17 +50,17 @@ public class InteractBlockListener
 							if (foundSign.getTeamA().size() == 0)
 							{
 								foundSign.teamA.add(player.getUniqueId());
-								player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena " + foundSign.getArena().getName()));
+								player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena ", TextColors.GRAY, foundSign.getArena().getName()));
 							}
 							else if (foundSign.getTeamA().size() < foundSign.getTeamB().size())
 							{
 								foundSign.teamA.add(player.getUniqueId());
-								player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena " + foundSign.getArena().getName()));
+								player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena ", TextColors.GRAY, foundSign.getArena().getName()));
 							}
 							else
 							{
 								foundSign.teamB.add(player.getUniqueId());
-								player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena " + foundSign.getArena().getName()));
+								player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena ", TextColors.GRAY, foundSign.getArena().getName()));
 							}
 						}
 					}
