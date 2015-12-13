@@ -1,5 +1,6 @@
 package io.github.hsyyid.ultimategames.listeners;
 
+import com.dracade.ember.Ember;
 import com.dracade.ember.core.Arena;
 import com.google.common.collect.Lists;
 import io.github.hsyyid.ultimategames.UltimateGames;
@@ -82,7 +83,7 @@ public class SignChangeListener
 									tileEntity.offer(data);
 								}
 
-								if (gameSign.getArena() instanceof DeathmatchArena && gameSign.getTeamA().size() >= 1 && gameSign.getTeamB().size() >= 1)
+								if (!Ember.getMinigame(gameSign.getArena()).isPresent() && gameSign.getArena() instanceof DeathmatchArena && (gameSign.getTeamA().size() >= 1 && gameSign.getTeamB().size() >= 1))
 								{
 									DeathmatchArena dmArena = (DeathmatchArena) gameSign.getArena();
 									List<Player> teamA = Lists.newArrayList();

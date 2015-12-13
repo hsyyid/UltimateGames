@@ -7,8 +7,12 @@ import com.dracade.ember.core.events.minigame.MinigameStoppedEvent;
 import com.google.common.collect.Lists;
 import io.github.hsyyid.ultimategames.UltimateGames;
 import io.github.hsyyid.ultimategames.arenas.DeathmatchArena;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
+import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Texts;
@@ -23,6 +27,8 @@ public class DeathmatchMinigame implements Minigame
 	private List<Player> teamA;
 	private List<Player> teamB;
 	private DeathmatchArena arena;
+	private int teamAPoints;
+	private int teamBPoints;
 
 	/**
 	 * Creates a new DeathmatchMinigame instance.
@@ -111,7 +117,7 @@ public class DeathmatchMinigame implements Minigame
 				{
 					System.out.println("[UltimateGames]: Error when ending deathmatch in arena " + arena.getName());
 				}
-			}).delay(1, TimeUnit.MINUTES).name("UltimateGames - End Deathmatch").submit(UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getInstance());
+			}).delay(1, TimeUnit.MINUTES).name("UltimateGames - End Deathmatch").submit(UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
 		}
 	}
 
@@ -133,5 +139,50 @@ public class DeathmatchMinigame implements Minigame
 	public void accept(Task t)
 	{
 		;
+	}
+
+	@Listener
+	public void onPlayerKilled(DestructEntityEvent.Death event)
+	{
+		if (event.getCause().first(Player.class).isPresent())
+		{
+			Player player = event.getCause().first(Player.class).get();
+			Living entityTarget = event.getTargetEntity();
+
+			if (entityTarget instanceof Player)
+			{
+				Player target = (Player) entityTarget;
+
+				if (teamA.contains(player) && teamB.contains(target))
+				{
+					teamAPoints++;
+				}
+				else if (teamB.contains(player) && teamA.contains(target))
+				{
+					teamBPoints++;
+				}
+			}
+		}
+	}
+
+	@Listener
+	public void onPlayerDamaged(DamageEntityEvent event)
+	{
+		if (event.getCause().first(Player.class).isPresent())
+		{
+			Player player = event.getCause().first(Player.class).get();
+			Entity entityTarget = event.getTargetEntity();
+
+			if (entityTarget instanceof Player)
+			{
+				Player target = (Player) entityTarget;
+
+				if ((teamA.contains(player) && teamA.contains(target)) || (teamB.contains(player) && teamB.contains(target)))
+				{
+					player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.RED, "You cannot damage players on your team!"));
+					event.setCancelled(true);
+				}
+			}
+		}
 	}
 }
