@@ -113,6 +113,9 @@ public class SignChangeListener
 									{
 										;
 									}
+									
+									gameSign.getTeamA().clear();
+									gameSign.getTeamB().clear();
 								}
 							}
 						}).interval(1, TimeUnit.MILLISECONDS).name("UltimateGames - Update UltimateGamesSign").submit(UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
