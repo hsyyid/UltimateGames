@@ -153,7 +153,16 @@ public class DeathmatchMinigame implements Minigame
 					player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GRAY, "The deathmatch has ended with a draw!"));
 
 				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Deathmatch has ended!"));
-				player.setLocation(this.arena.getSpawn().getLocation());
+				
+				if (player.getWorld().getUniqueId().equals(this.arena.getSpawn().getLocation().getExtent().getUniqueId()))
+				{
+					player.setLocation(this.arena.getSpawn().getLocation());
+				}
+				else
+				{
+					player.transferToWorld(this.arena.getSpawn().getLocation().getExtent().getUniqueId(), this.arena.getSpawn().getLocation().getPosition());
+				}
+				
 				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Teleported back to lobby."));
 			}
 		}
