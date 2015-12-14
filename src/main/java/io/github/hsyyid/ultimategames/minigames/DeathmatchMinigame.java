@@ -11,6 +11,8 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
+import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.entity.living.player.RespawnPlayerEvent;
@@ -153,7 +155,7 @@ public class DeathmatchMinigame implements Minigame
 					player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GRAY, "The deathmatch has ended with a draw!"));
 
 				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Deathmatch has ended!"));
-				
+
 				if (player.getWorld().getUniqueId().equals(this.arena.getSpawn().getLocation().getExtent().getUniqueId()))
 				{
 					player.setLocation(this.arena.getSpawn().getLocation());
@@ -162,7 +164,7 @@ public class DeathmatchMinigame implements Minigame
 				{
 					player.transferToWorld(this.arena.getSpawn().getLocation().getExtent().getUniqueId(), this.arena.getSpawn().getLocation().getPosition());
 				}
-				
+
 				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Teleported back to lobby."));
 			}
 		}
@@ -177,22 +179,29 @@ public class DeathmatchMinigame implements Minigame
 	@Listener
 	public void onPlayerKilled(DestructEntityEvent.Death event)
 	{
-		if (event.getCause().first(Player.class).isPresent())
+		if (event.getCause().first(DamageSource.class).isPresent())
 		{
-			Player player = event.getCause().first(Player.class).get();
-			Living entityTarget = event.getTargetEntity();
+			DamageSource dmgSource = event.getCause().first(DamageSource.class).get();
 
-			if (entityTarget instanceof Player)
+			if (dmgSource instanceof EntityDamageSource)
 			{
-				Player target = (Player) entityTarget;
+				EntityDamageSource entityDmgSource = (EntityDamageSource) dmgSource;
+				Entity entity = entityDmgSource.getSource();
+				Living entityTarget = event.getTargetEntity();
 
-				if (this.teamA.contains(player) && this.teamB.contains(target))
+				if (entity instanceof Player && entityTarget instanceof Player)
 				{
-					this.teamAPoints++;
-				}
-				else if (this.teamB.contains(player) && this.teamA.contains(target))
-				{
-					this.teamBPoints++;
+					Player player = (Player) entity;
+					Player target = (Player) entityTarget;
+
+					if (this.teamA.contains(player) && this.teamB.contains(target))
+					{
+						this.teamAPoints++;
+					}
+					else if (this.teamB.contains(player) && this.teamA.contains(target))
+					{
+						this.teamBPoints++;
+					}
 				}
 			}
 		}
@@ -218,17 +227,17 @@ public class DeathmatchMinigame implements Minigame
 			}
 		}
 	}
-	
+
 	@Listener
 	public void onPlayerRespawn(RespawnPlayerEvent event)
 	{
 		Player player = event.getTargetEntity();
-		
+
 		if (this.teamA.contains(player))
 		{
 			event.setToTransform(event.getToTransform().setLocation(this.arena.getTeamASpawn().getLocation()));
 		}
-		else if(this.teamB.contains(player))
+		else if (this.teamB.contains(player))
 		{
 			event.setToTransform(event.getToTransform().setLocation(this.arena.getTeamBSpawn().getLocation()));
 		}
