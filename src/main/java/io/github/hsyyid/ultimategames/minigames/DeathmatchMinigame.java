@@ -13,6 +13,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
+import org.spongepowered.api.event.entity.living.player.RespawnPlayerEvent;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Texts;
@@ -206,6 +207,21 @@ public class DeathmatchMinigame implements Minigame
 					event.setCancelled(true);
 				}
 			}
+		}
+	}
+	
+	@Listener
+	public void onPlayerRespawn(RespawnPlayerEvent event)
+	{
+		Player player = event.getTargetEntity();
+		
+		if (this.teamA.contains(player))
+		{
+			event.setToTransform(event.getToTransform().setLocation(this.arena.getTeamASpawn().getLocation()));
+		}
+		else if(this.teamB.contains(player))
+		{
+			event.setToTransform(event.getToTransform().setLocation(this.arena.getTeamBSpawn().getLocation()));
 		}
 	}
 }
