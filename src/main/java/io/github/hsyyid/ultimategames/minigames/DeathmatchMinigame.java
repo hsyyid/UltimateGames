@@ -95,13 +95,29 @@ public class DeathmatchMinigame implements Minigame
 
 			for (Player player : this.teamA)
 			{
-				player.setLocation(this.arena.getTeamASpawn().getLocation());
+				if (player.getWorld().getUniqueId().equals(this.arena.getTeamASpawn().getLocation().getExtent().getUniqueId()))
+				{
+					player.setLocation(this.arena.getTeamASpawn().getLocation());
+				}
+				else
+				{
+					player.transferToWorld(this.arena.getTeamASpawn().getLocation().getExtent().getUniqueId(), this.arena.getTeamASpawn().getLocation().getPosition());
+				}
+
 				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GOLD, "May the games begin!"));
 			}
 
 			for (Player player : this.teamB)
 			{
-				player.setLocation(this.arena.getTeamBSpawn().getLocation());
+				if (player.getWorld().getUniqueId().equals(this.arena.getTeamBSpawn().getLocation().getExtent().getUniqueId()))
+				{
+					player.setLocation(this.arena.getTeamBSpawn().getLocation());
+				}
+				else
+				{
+					player.transferToWorld(this.arena.getTeamBSpawn().getLocation().getExtent().getUniqueId(), this.arena.getTeamBSpawn().getLocation().getPosition());
+				}
+
 				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GOLD, "May the games begin!"));
 			}
 
@@ -128,6 +144,13 @@ public class DeathmatchMinigame implements Minigame
 		{
 			for (Player player : players())
 			{
+				if (this.teamAPoints > this.teamBPoints)
+					player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Team A has won the Deathmatch!"));
+				else if (this.teamBPoints > this.teamAPoints)
+					player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Team B has won the Deathmatch!"));
+				else
+					player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GRAY, "The deathmatch has ended with a draw!"));
+
 				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Deathmatch has ended!"));
 				player.setLocation(this.arena.getSpawn().getLocation());
 				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Teleported back to lobby."));
@@ -153,13 +176,13 @@ public class DeathmatchMinigame implements Minigame
 			{
 				Player target = (Player) entityTarget;
 
-				if (teamA.contains(player) && teamB.contains(target))
+				if (this.teamA.contains(player) && this.teamB.contains(target))
 				{
-					teamAPoints++;
+					this.teamAPoints++;
 				}
-				else if (teamB.contains(player) && teamA.contains(target))
+				else if (this.teamB.contains(player) && this.teamA.contains(target))
 				{
-					teamBPoints++;
+					this.teamBPoints++;
 				}
 			}
 		}

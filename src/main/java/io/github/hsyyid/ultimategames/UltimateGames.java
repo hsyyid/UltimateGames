@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import io.github.hsyyid.ultimategames.commands.UltimateGamesExecutor;
 import io.github.hsyyid.ultimategames.commands.arena.CreateArenaExecutor;
 import io.github.hsyyid.ultimategames.commands.arena.SetTeamSpawnExecutor;
+import io.github.hsyyid.ultimategames.listeners.BreakBlockListener;
 import io.github.hsyyid.ultimategames.listeners.InteractBlockListener;
 import io.github.hsyyid.ultimategames.listeners.SignChangeListener;
 import io.github.hsyyid.ultimategames.utils.ConfigManager;
@@ -114,7 +115,8 @@ public class UltimateGames
 		
 		game.getEventManager().registerListeners(this, new InteractBlockListener());
 		game.getEventManager().registerListeners(this, new SignChangeListener());
-
+		game.getEventManager().registerListeners(this, new BreakBlockListener());
+		
 		getLogger().info("-----------------------------");
 		getLogger().info("UltimateGames was made by HassanS6000!");
 		getLogger().info("Please post all errors on the Sponge Thread or on GitHub!");
