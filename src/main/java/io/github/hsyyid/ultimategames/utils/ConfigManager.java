@@ -26,11 +26,43 @@ public class ConfigManager
 		return json;
 	}
 	
+	public static String readSignsJSON()
+	{
+		String json = null;
+
+		try
+		{
+			json = readFile("UltimateGameSigns.json", StandardCharsets.UTF_8);
+		}
+		catch (IOException e)
+		{
+			System.out.println("Could not read JSON file!");
+		}
+
+		return json;
+	}
+	
 	public static void writeJSON(String json)
 	{
 		try
 		{
 			FileWriter fileWriter = new FileWriter("UltimateGames.json");
+			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+			bufferedWriter.write(json);
+			bufferedWriter.flush();
+			bufferedWriter.close();
+		}
+		catch (IOException ex)
+		{
+			System.out.println("Could not save JSON file!");
+		}
+	}
+	
+	public static void writeSignJSON(String json)
+	{
+		try
+		{
+			FileWriter fileWriter = new FileWriter("UltimateGameSigns.json");
 			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 			bufferedWriter.write(json);
 			bufferedWriter.flush();

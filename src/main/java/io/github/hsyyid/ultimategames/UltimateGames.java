@@ -1,12 +1,12 @@
 package io.github.hsyyid.ultimategames;
 
 import com.dracade.ember.Ember;
-import com.dracade.ember.core.Arena;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import io.github.hsyyid.ultimategames.arenas.DeathmatchArena;
 import io.github.hsyyid.ultimategames.commands.UltimateGamesExecutor;
 import io.github.hsyyid.ultimategames.commands.arena.CreateArenaExecutor;
+import io.github.hsyyid.ultimategames.commands.arena.SetTeamLoadoutExecutor;
 import io.github.hsyyid.ultimategames.commands.arena.SetTeamSpawnExecutor;
 import io.github.hsyyid.ultimategames.listeners.BreakBlockListener;
 import io.github.hsyyid.ultimategames.listeners.InteractBlockListener;
@@ -18,6 +18,7 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.DefaultConfig;
@@ -33,7 +34,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 @Plugin(id = "UltimateGames", name = "UltimateGames", version = "0.1", dependencies = "required-after:TotalEconomy;required-after:EMBER")
 public class UltimateGames
@@ -41,8 +41,8 @@ public class UltimateGames
 	public static Game game;
 	public static ConfigurationNode config;
 	public static ConfigurationLoader<CommentedConfigurationNode> configurationManager;
-	public static List<Arena> arenas = Lists.newArrayList();
-	public static Set<UltimateGameSign> gameSigns = Sets.newHashSet();
+	public static List<DeathmatchArena> arenas = Lists.newArrayList();
+	public static List<UltimateGameSign> gameSigns = Lists.newArrayList();
 
 	@Inject
 	private Logger logger;
@@ -65,7 +65,7 @@ public class UltimateGames
 	{
 		getLogger().info("UltimateGames loading...");
 
-		game = event.getGame();
+		game = Sponge.getGame();
 
 		try
 		{
@@ -104,6 +104,16 @@ public class UltimateGames
 			.executor(new SetTeamSpawnExecutor())
 			.build());
 
+		subcommands.put(Arrays.asList("setteamloadout"), CommandSpec.builder()
+			.description(Texts.of("Set Team Loadout Command"))
+			.permission("ultimategames.teamloadout.set")
+			.arguments(GenericArguments.seq(
+				GenericArguments.onlyOne(GenericArguments.string(Texts.of("arena"))),
+				GenericArguments.onlyOne(GenericArguments.string(Texts.of("team"))),
+				GenericArguments.onlyOne(GenericArguments.remainingJoinedStrings(Texts.of("loadout")))))
+			.executor(new SetTeamLoadoutExecutor())
+			.build());
+
 		CommandSpec ultimateGamesCommandSpec = CommandSpec.builder()
 			.description(Texts.of("Ultimate Games Command"))
 			.permission("ultimategames.use")
@@ -112,11 +122,11 @@ public class UltimateGames
 			.build();
 
 		game.getCommandManager().register(this, ultimateGamesCommandSpec, "ultimategames", "ug");
-		
+
 		game.getEventManager().registerListeners(this, new InteractBlockListener());
 		game.getEventManager().registerListeners(this, new SignChangeListener());
 		game.getEventManager().registerListeners(this, new BreakBlockListener());
-		
+
 		getLogger().info("-----------------------------");
 		getLogger().info("UltimateGames was made by HassanS6000!");
 		getLogger().info("Please post all errors on the Sponge Thread or on GitHub!");
@@ -134,11 +144,28 @@ public class UltimateGames
 		{
 			try
 			{
-				UltimateGames.arenas = Arrays.asList(Ember.serializer().gson().fromJson(json, Arena[].class));
+				UltimateGames.arenas = Arrays.asList(Ember.serializer().gson().fromJson(json, DeathmatchArena[].class));
 			}
 			catch (Exception e)
 			{
 				getLogger().error("An error occured while reading the arenas!");
+				e.printStackTrace();
+			}
+		}
+		
+		json = ConfigManager.readSignsJSON();
+
+		if (json != null && json.length() > 0)
+		{
+			try
+			{
+				//TODO: Reading of GameSigns
+				//UltimateGames.gameSigns = Arrays.asList(Ember.serializer().gson().fromJson(json, UltimateGameSign[].class));
+			}
+			catch (Exception e)
+			{
+				getLogger().error("An error occured while reading the UltimateGame Signs!");
+				e.printStackTrace();
 			}
 		}
 	}
@@ -153,10 +180,23 @@ public class UltimateGames
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
 			getLogger().error("There was an issue while saving the arenas!");
+			e.printStackTrace();
 		}
 
+		try
+		{
+			//TODO: Writing of GameSigns
+			//String json = Ember.serializer().gson().toJson(UltimateGames.gameSigns);
+			//ConfigManager.writeSignJSON(json);
+		}
+		catch (Exception e)
+		{
+			getLogger().error("There was an issue while saving the arenas!");
+			e.printStackTrace();
+		}
+
+		
 		getLogger().info("UltimateGames disabled.");
 	}
 

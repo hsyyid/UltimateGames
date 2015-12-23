@@ -15,7 +15,7 @@ import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
-import org.spongepowered.api.event.entity.living.player.RespawnPlayerEvent;
+import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Texts;
@@ -98,6 +98,8 @@ public class DeathmatchMinigame implements Minigame
 
 			for (Player player : this.teamA)
 			{
+				UltimateGames.game.getCommandManager().process(player, "kit " + this.arena.getTeamALoadout());
+				
 				if (player.getWorld().getUniqueId().equals(this.arena.getTeamASpawn().getLocation().getExtent().getUniqueId()))
 				{
 					player.setLocation(this.arena.getTeamASpawn().getLocation());
@@ -112,6 +114,8 @@ public class DeathmatchMinigame implements Minigame
 
 			for (Player player : this.teamB)
 			{
+				UltimateGames.game.getCommandManager().process(player, "kit " + this.arena.getTeamBLoadout());
+				
 				if (player.getWorld().getUniqueId().equals(this.arena.getTeamBSpawn().getLocation().getExtent().getUniqueId()))
 				{
 					player.setLocation(this.arena.getTeamBSpawn().getLocation());
@@ -236,10 +240,12 @@ public class DeathmatchMinigame implements Minigame
 		if (this.teamA.contains(player))
 		{
 			event.setToTransform(event.getToTransform().setLocation(this.arena.getTeamASpawn().getLocation()));
+			UltimateGames.game.getCommandManager().process(player, "kit " + this.arena.getTeamALoadout());
 		}
 		else if (this.teamB.contains(player))
 		{
 			event.setToTransform(event.getToTransform().setLocation(this.arena.getTeamBSpawn().getLocation()));
+			UltimateGames.game.getCommandManager().process(player, "kit " + this.arena.getTeamBLoadout());
 		}
 	}
 }

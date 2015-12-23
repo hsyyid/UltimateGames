@@ -7,6 +7,8 @@ public class DeathmatchArena extends Arena
 {
 	private SpawnPoint teamASpawn;
 	private SpawnPoint teamBSpawn;
+	private String teamALoadout;
+	private String teamBLoadout;
 	
 	public DeathmatchArena(String name, SpawnPoint spawn)
 	{
@@ -18,9 +20,19 @@ public class DeathmatchArena extends Arena
 		this.teamASpawn = teamASpawn;
 	}
 	
+	public void setTeamALoadout(String teamALoadout)
+	{
+		this.teamALoadout = teamALoadout;
+	}
+	
 	public void setTeamBSpawn(SpawnPoint teamBSpawn)
 	{
 		this.teamBSpawn = teamBSpawn;
+	}
+	
+	public void setTeamBLoadout(String teamBLoadout)
+	{
+		this.teamBLoadout = teamBLoadout;
 	}
 	
 	public SpawnPoint getTeamASpawn()
@@ -28,8 +40,18 @@ public class DeathmatchArena extends Arena
 		return teamASpawn;
 	}
 	
+	public String getTeamALoadout()
+	{
+		return teamALoadout;
+	}
+	
 	public SpawnPoint getTeamBSpawn()
 	{
 		return teamBSpawn;
+	}
+	
+	public String getTeamBLoadout()
+	{
+		return teamBLoadout;
 	}
 }
