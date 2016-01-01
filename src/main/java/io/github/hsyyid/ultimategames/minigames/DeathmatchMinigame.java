@@ -18,7 +18,7 @@ import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.Collection;
@@ -93,7 +93,7 @@ public class DeathmatchMinigame implements Minigame
 		{
 			for (Player player : players())
 			{
-				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Deathmatch starting..."));
+				player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Deathmatch starting..."));
 			}
 
 			for (Player player : this.teamA)
@@ -109,7 +109,7 @@ public class DeathmatchMinigame implements Minigame
 					player.transferToWorld(this.arena.getTeamASpawn().getLocation().getExtent().getUniqueId(), this.arena.getTeamASpawn().getLocation().getPosition());
 				}
 
-				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GOLD, "May the games begin!"));
+				player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GOLD, "May the games begin!"));
 			}
 
 			for (Player player : this.teamB)
@@ -125,7 +125,7 @@ public class DeathmatchMinigame implements Minigame
 					player.transferToWorld(this.arena.getTeamBSpawn().getLocation().getExtent().getUniqueId(), this.arena.getTeamBSpawn().getLocation().getPosition());
 				}
 
-				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GOLD, "May the games begin!"));
+				player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GOLD, "May the games begin!"));
 			}
 
 			Scheduler scheduler = UltimateGames.game.getScheduler();
@@ -152,13 +152,13 @@ public class DeathmatchMinigame implements Minigame
 			for (Player player : players())
 			{
 				if (this.teamAPoints > this.teamBPoints)
-					player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Team A has won the Deathmatch!"));
+					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Team A has won the Deathmatch!"));
 				else if (this.teamBPoints > this.teamAPoints)
-					player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Team B has won the Deathmatch!"));
+					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Team B has won the Deathmatch!"));
 				else
-					player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GRAY, "The deathmatch has ended with a draw!"));
+					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GRAY, "The deathmatch has ended with a draw!"));
 
-				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Deathmatch has ended!"));
+				player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Deathmatch has ended!"));
 
 				if (player.getWorld().getUniqueId().equals(this.arena.getSpawn().getLocation().getExtent().getUniqueId()))
 				{
@@ -169,7 +169,7 @@ public class DeathmatchMinigame implements Minigame
 					player.transferToWorld(this.arena.getSpawn().getLocation().getExtent().getUniqueId(), this.arena.getSpawn().getLocation().getPosition());
 				}
 
-				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Teleported back to lobby."));
+				player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Teleported back to lobby."));
 			}
 		}
 	}
@@ -225,7 +225,7 @@ public class DeathmatchMinigame implements Minigame
 
 				if ((teamA.contains(player) && teamA.contains(target)) || (teamB.contains(player) && teamB.contains(target)))
 				{
-					player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.RED, "You cannot damage players on your team!"));
+					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.RED, "You cannot damage players on your team!"));
 					event.setCancelled(true);
 				}
 			}

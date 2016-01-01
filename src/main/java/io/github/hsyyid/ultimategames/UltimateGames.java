@@ -27,7 +27,7 @@ import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppedServerEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -87,35 +87,35 @@ public class UltimateGames
 		HashMap<List<String>, CommandSpec> subcommands = new HashMap<List<String>, CommandSpec>();
 
 		subcommands.put(Arrays.asList("create"), CommandSpec.builder()
-			.description(Texts.of("Create Arena Command"))
+			.description(Text.of("Create Arena Command"))
 			.permission("ultimategames.create")
 			.arguments(GenericArguments.seq(
-				GenericArguments.onlyOne(GenericArguments.string(Texts.of("type"))),
-				GenericArguments.onlyOne(GenericArguments.string(Texts.of("name")))))
+				GenericArguments.onlyOne(GenericArguments.string(Text.of("type"))),
+				GenericArguments.onlyOne(GenericArguments.string(Text.of("name")))))
 			.executor(new CreateArenaExecutor())
 			.build());
 
 		subcommands.put(Arrays.asList("setteamspawn"), CommandSpec.builder()
-			.description(Texts.of("Set Team Spawn Command"))
+			.description(Text.of("Set Team Spawn Command"))
 			.permission("ultimategames.teamspawn.set")
 			.arguments(GenericArguments.seq(
-				GenericArguments.onlyOne(GenericArguments.string(Texts.of("arena"))),
-				GenericArguments.onlyOne(GenericArguments.string(Texts.of("team")))))
+				GenericArguments.onlyOne(GenericArguments.string(Text.of("arena"))),
+				GenericArguments.onlyOne(GenericArguments.string(Text.of("team")))))
 			.executor(new SetTeamSpawnExecutor())
 			.build());
 
 		subcommands.put(Arrays.asList("setteamloadout"), CommandSpec.builder()
-			.description(Texts.of("Set Team Loadout Command"))
+			.description(Text.of("Set Team Loadout Command"))
 			.permission("ultimategames.teamloadout.set")
 			.arguments(GenericArguments.seq(
-				GenericArguments.onlyOne(GenericArguments.string(Texts.of("arena"))),
-				GenericArguments.onlyOne(GenericArguments.string(Texts.of("team"))),
-				GenericArguments.onlyOne(GenericArguments.remainingJoinedStrings(Texts.of("loadout")))))
+				GenericArguments.onlyOne(GenericArguments.string(Text.of("arena"))),
+				GenericArguments.onlyOne(GenericArguments.string(Text.of("team"))),
+				GenericArguments.onlyOne(GenericArguments.remainingJoinedStrings(Text.of("loadout")))))
 			.executor(new SetTeamLoadoutExecutor())
 			.build());
 
 		CommandSpec ultimateGamesCommandSpec = CommandSpec.builder()
-			.description(Texts.of("Ultimate Games Command"))
+			.description(Text.of("Ultimate Games Command"))
 			.permission("ultimategames.use")
 			.executor(new UltimateGamesExecutor())
 			.children(subcommands)

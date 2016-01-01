@@ -9,7 +9,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 public class CreateArenaExecutor implements CommandExecutor
@@ -29,13 +29,13 @@ public class CreateArenaExecutor implements CommandExecutor
 			{
 				DeathmatchArena arena = new DeathmatchArena(name, spawnpoint);
 				UltimateGames.arenas.add(arena);
-				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Created deathmatch arena. Spawn set to your current location!"));
-				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.RED, "Do not forget to set spawns for both team a and b!"));
+				player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Created deathmatch arena. Spawn set to your current location!"));
+				player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.RED, "Do not forget to set spawns for both team a and b!"));
 			}
 		}
 		else
 		{
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "You may only use this command as an in-game player."));
+			src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "You may only use this command as an in-game player."));
 		}
 
 		return CommandResult.success();

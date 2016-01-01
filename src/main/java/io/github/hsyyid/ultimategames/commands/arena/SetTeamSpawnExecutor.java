@@ -10,7 +10,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 public class SetTeamSpawnExecutor implements CommandExecutor
@@ -43,28 +43,28 @@ public class SetTeamSpawnExecutor implements CommandExecutor
 				if (team.equalsIgnoreCase("a"))
 				{
 					foundArena.setTeamASpawn(spawnpoint);
-					player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Spawn for team A set to your current location!"));
+					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Spawn for team A set to your current location!"));
 				}
 				else if (team.equalsIgnoreCase("b"))
 				{
 					foundArena.setTeamBSpawn(spawnpoint);
-					player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Spawn for team B set to your current location!"));
+					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Spawn for team B set to your current location!"));
 				}
 				else
 				{
-					player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.DARK_RED, "Error! ", TextColors.RED, "You may only specify team A or team B!"));
+					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.DARK_RED, "Error! ", TextColors.RED, "You may only specify team A or team B!"));
 				}
 				
 				UltimateGames.arenas.add(foundArena);
 			}
 			else
 			{
-				player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.DARK_RED, "Error! ", TextColors.RED, "Arena not found."));
+				player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.DARK_RED, "Error! ", TextColors.RED, "Arena not found."));
 			}
 		}
 		else
 		{
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "You may only use this command as an in-game player."));
+			src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "You may only use this command as an in-game player."));
 		}
 
 		return CommandResult.success();

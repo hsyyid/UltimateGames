@@ -16,7 +16,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -36,8 +36,8 @@ public class SignChangeListener
 			Sign sign = event.getTargetTile();
 			final Location<World> signLocation = sign.getLocation();
 			SignData signData = event.getText();
-			String line0 = Texts.toPlain(signData.getValue(Keys.SIGN_LINES).get().get(0));
-			String line1 = Texts.toPlain(signData.getValue(Keys.SIGN_LINES).get().get(1));
+			String line0 = signData.getValue(Keys.SIGN_LINES).get().get(0).toPlain();
+			String line1 = signData.getValue(Keys.SIGN_LINES).get().get(1).toPlain();
 
 			if (line0.equals("[UltimateGames]"))
 			{
@@ -57,11 +57,11 @@ public class SignChangeListener
 
 					if (foundArena != null)
 					{
-						signData = signData.set(signData.getValue(Keys.SIGN_LINES).get().set(0, Texts.of(TextColors.DARK_BLUE, "[UltimateGames]")));
-						signData = signData.set(signData.getValue(Keys.SIGN_LINES).get().set(1, Texts.of(TextColors.GREEN, "Arena: ", TextColors.GRAY, arenaName)));
+						signData = signData.set(signData.getValue(Keys.SIGN_LINES).get().set(0, Text.of(TextColors.DARK_BLUE, "[UltimateGames]")));
+						signData = signData.set(signData.getValue(Keys.SIGN_LINES).get().set(1, Text.of(TextColors.GREEN, "Arena: ", TextColors.GRAY, arenaName)));
 						UltimateGameSign gameSign = new UltimateGameSign(signLocation, foundArena);
 						UltimateGames.gameSigns.add(gameSign);
-						player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Successfully created UltimateGames sign!"));
+						player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Successfully created UltimateGames sign!"));
 
 						Scheduler scheduler = UltimateGames.game.getScheduler();
 						Task.Builder taskBuilder = scheduler.createTaskBuilder();
@@ -78,8 +78,8 @@ public class SignChangeListener
 								if (optionalSignData.isPresent())
 								{
 									SignData data = optionalSignData.get();
-									data = data.set(data.getValue(Keys.SIGN_LINES).get().set(2, Texts.of(TextColors.BLUE, "Team A: ", TextColors.GRAY, teamASize)));
-									data = data.set(data.getValue(Keys.SIGN_LINES).get().set(3, Texts.of(TextColors.RED, "Teeam B: ", TextColors.GRAY, teamBSize)));
+									data = data.set(data.getValue(Keys.SIGN_LINES).get().set(2, Text.of(TextColors.BLUE, "Team A: ", TextColors.GRAY, teamASize)));
+									data = data.set(data.getValue(Keys.SIGN_LINES).get().set(3, Text.of(TextColors.RED, "Teeam B: ", TextColors.GRAY, teamBSize)));
 									tileEntity.offer(data);
 								}
 
@@ -123,8 +123,8 @@ public class SignChangeListener
 				}
 				else
 				{
-					signData = signData.set(signData.getValue(Keys.SIGN_LINES).get().set(0, Texts.of(TextColors.DARK_RED, "[UltimateGames]")));
-					player.sendMessage(Texts.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.DARK_RED, "Error! ", TextColors.RED, "You do not have permission to create UltimateGames signs."));
+					signData = signData.set(signData.getValue(Keys.SIGN_LINES).get().set(0, Text.of(TextColors.DARK_RED, "[UltimateGames]")));
+					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.DARK_RED, "Error! ", TextColors.RED, "You do not have permission to create UltimateGames signs."));
 				}
 			}
 		}
