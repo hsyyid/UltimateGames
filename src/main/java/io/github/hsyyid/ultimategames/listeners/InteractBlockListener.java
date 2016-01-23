@@ -20,8 +20,7 @@ public class InteractBlockListener
 		{
 			Player player = (Player) event.getCause().first(Player.class).get();
 
-			if (event.getTargetBlock().getState().getType().equals(BlockTypes.WALL_SIGN) 
-				|| event.getTargetBlock().getState().getType().equals(BlockTypes.STANDING_SIGN))
+			if (event.getTargetBlock().getState().getType().equals(BlockTypes.WALL_SIGN) || event.getTargetBlock().getState().getType().equals(BlockTypes.STANDING_SIGN))
 			{
 				Location<World> blockLocation = event.getTargetBlock().getLocation().get();
 				UltimateGameSign foundSign = null;
@@ -41,7 +40,7 @@ public class InteractBlockListener
 				{
 					if (player.hasPermission("ultimategames.signs.use"))
 					{
-						if (foundSign.getTeamA().contains(player.getUniqueId()) || foundSign.getTeamB().contains(player.getUniqueId()))
+						if (foundSign.getTeamA().contains(player.getUniqueId().toString()) || foundSign.getTeamB().contains(player.getUniqueId().toString()))
 						{
 							player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.DARK_RED, "Error! ", TextColors.RED, "You are already in queue!"));
 						}
@@ -49,18 +48,18 @@ public class InteractBlockListener
 						{
 							if (foundSign.getTeamA().size() == 0)
 							{
-								foundSign.teamA.add(player.getUniqueId());
-								player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena ", TextColors.GRAY, foundSign.getArena().getName()));
+								foundSign.teamA.add(player.getUniqueId().toString());
+								player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena ", TextColors.GRAY, foundSign.getArena()));
 							}
 							else if (foundSign.getTeamA().size() < foundSign.getTeamB().size())
 							{
-								foundSign.teamA.add(player.getUniqueId());
-								player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena ", TextColors.GRAY, foundSign.getArena().getName()));
+								foundSign.teamA.add(player.getUniqueId().toString());
+								player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena ", TextColors.GRAY, foundSign.getArena()));
 							}
 							else
 							{
-								foundSign.teamB.add(player.getUniqueId());
-								player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena ", TextColors.GRAY, foundSign.getArena().getName()));
+								foundSign.teamB.add(player.getUniqueId().toString());
+								player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena ", TextColors.GRAY, foundSign.getArena()));
 							}
 						}
 					}

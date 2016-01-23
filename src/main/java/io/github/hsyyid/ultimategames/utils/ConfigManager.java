@@ -25,7 +25,7 @@ public class ConfigManager
 
 		return json;
 	}
-	
+
 	public static String readSignsJSON()
 	{
 		String json = null;
@@ -41,7 +41,7 @@ public class ConfigManager
 
 		return json;
 	}
-	
+
 	public static void writeJSON(String json)
 	{
 		try
@@ -57,7 +57,7 @@ public class ConfigManager
 			System.out.println("Could not save JSON file!");
 		}
 	}
-	
+
 	public static void writeSignJSON(String json)
 	{
 		try
@@ -73,7 +73,7 @@ public class ConfigManager
 			System.out.println("Could not save JSON file!");
 		}
 	}
-	
+
 	private static String readFile(String path, Charset encoding) throws IOException
 	{
 		byte[] encoded = Files.readAllBytes(Paths.get(path));

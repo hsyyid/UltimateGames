@@ -54,7 +54,7 @@ public class SetTeamSpawnExecutor implements CommandExecutor
 				{
 					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.DARK_RED, "Error! ", TextColors.RED, "You may only specify team A or team B!"));
 				}
-				
+
 				UltimateGames.arenas.add(foundArena);
 			}
 			else

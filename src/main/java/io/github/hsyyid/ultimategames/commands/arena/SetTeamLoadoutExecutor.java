@@ -47,13 +47,13 @@ public class SetTeamLoadoutExecutor implements CommandExecutor
 				else if (team.equalsIgnoreCase("b"))
 				{
 					foundArena.setTeamBLoadout(loadout);
-					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Team B loadout set!!"));
+					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Team B loadout set!"));
 				}
 				else
 				{
 					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.DARK_RED, "Error! ", TextColors.RED, "You may only specify team A or team B!"));
 				}
-				
+
 				UltimateGames.arenas.add(foundArena);
 			}
 			else

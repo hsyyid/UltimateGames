@@ -13,6 +13,7 @@ import io.github.hsyyid.ultimategames.listeners.InteractBlockListener;
 import io.github.hsyyid.ultimategames.listeners.SignChangeListener;
 import io.github.hsyyid.ultimategames.utils.ConfigManager;
 import io.github.hsyyid.ultimategames.utils.UltimateGameSign;
+import io.github.hsyyid.ultimategames.utils.Utils;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -35,7 +36,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-@Plugin(id = "UltimateGames", name = "UltimateGames", version = "0.1", dependencies = "required-after:TotalEconomy;required-after:EMBER")
+@Plugin(id = "UltimateGames", name = "UltimateGames", version = "0.1", dependencies = "required-after:EMBER")
 public class UltimateGames
 {
 	public static Game game;
@@ -89,28 +90,21 @@ public class UltimateGames
 		subcommands.put(Arrays.asList("create"), CommandSpec.builder()
 			.description(Text.of("Create Arena Command"))
 			.permission("ultimategames.create")
-			.arguments(GenericArguments.seq(
-				GenericArguments.onlyOne(GenericArguments.string(Text.of("type"))),
-				GenericArguments.onlyOne(GenericArguments.string(Text.of("name")))))
+			.arguments(GenericArguments.seq(GenericArguments.onlyOne(GenericArguments.string(Text.of("type"))), GenericArguments.onlyOne(GenericArguments.string(Text.of("name")))))
 			.executor(new CreateArenaExecutor())
 			.build());
 
 		subcommands.put(Arrays.asList("setteamspawn"), CommandSpec.builder()
 			.description(Text.of("Set Team Spawn Command"))
 			.permission("ultimategames.teamspawn.set")
-			.arguments(GenericArguments.seq(
-				GenericArguments.onlyOne(GenericArguments.string(Text.of("arena"))),
-				GenericArguments.onlyOne(GenericArguments.string(Text.of("team")))))
+			.arguments(GenericArguments.seq(GenericArguments.onlyOne(GenericArguments.string(Text.of("arena"))), GenericArguments.onlyOne(GenericArguments.string(Text.of("team")))))
 			.executor(new SetTeamSpawnExecutor())
 			.build());
 
 		subcommands.put(Arrays.asList("setteamloadout"), CommandSpec.builder()
 			.description(Text.of("Set Team Loadout Command"))
 			.permission("ultimategames.teamloadout.set")
-			.arguments(GenericArguments.seq(
-				GenericArguments.onlyOne(GenericArguments.string(Text.of("arena"))),
-				GenericArguments.onlyOne(GenericArguments.string(Text.of("team"))),
-				GenericArguments.onlyOne(GenericArguments.remainingJoinedStrings(Text.of("loadout")))))
+			.arguments(GenericArguments.seq(GenericArguments.onlyOne(GenericArguments.string(Text.of("arena"))), GenericArguments.onlyOne(GenericArguments.string(Text.of("team"))), GenericArguments.onlyOne(GenericArguments.remainingJoinedStrings(Text.of("loadout")))))
 			.executor(new SetTeamLoadoutExecutor())
 			.build());
 
@@ -152,15 +146,19 @@ public class UltimateGames
 				e.printStackTrace();
 			}
 		}
-		
+
 		json = ConfigManager.readSignsJSON();
 
 		if (json != null && json.length() > 0)
 		{
 			try
 			{
-				//TODO: Reading of GameSigns
-				//UltimateGames.gameSigns = Arrays.asList(Ember.serializer().gson().fromJson(json, UltimateGameSign[].class));
+				UltimateGames.gameSigns = Arrays.asList(Ember.serializer().gson().fromJson(json, UltimateGameSign[].class));
+				
+				for(UltimateGameSign gameSign : UltimateGames.gameSigns)
+				{
+					Utils.startSignService(gameSign, gameSign.getLocation(), gameSign.getArena());
+				}
 			}
 			catch (Exception e)
 			{
@@ -186,17 +184,15 @@ public class UltimateGames
 
 		try
 		{
-			//TODO: Writing of GameSigns
-			//String json = Ember.serializer().gson().toJson(UltimateGames.gameSigns);
-			//ConfigManager.writeSignJSON(json);
+			String json = Ember.serializer().gson().toJson(UltimateGames.gameSigns);
+			ConfigManager.writeSignJSON(json);
 		}
 		catch (Exception e)
 		{
-			getLogger().error("There was an issue while saving the arenas!");
+			getLogger().error("There was an issue while saving the game signs!");
 			e.printStackTrace();
 		}
 
-		
 		getLogger().info("UltimateGames disabled.");
 	}
 

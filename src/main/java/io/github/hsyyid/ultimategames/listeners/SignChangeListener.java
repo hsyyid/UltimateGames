@@ -1,29 +1,18 @@
 package io.github.hsyyid.ultimategames.listeners;
 
-import com.dracade.ember.Ember;
-import com.dracade.ember.core.Arena;
-import com.google.common.collect.Lists;
 import io.github.hsyyid.ultimategames.UltimateGames;
-import io.github.hsyyid.ultimategames.arenas.DeathmatchArena;
-import io.github.hsyyid.ultimategames.minigames.DeathmatchMinigame;
 import io.github.hsyyid.ultimategames.utils.UltimateGameSign;
+import io.github.hsyyid.ultimategames.utils.Utils;
 import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
-import org.spongepowered.api.scheduler.Scheduler;
-import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 public class SignChangeListener
 {
@@ -44,81 +33,15 @@ public class SignChangeListener
 				if (player.hasPermission("ultimategames.signs.create"))
 				{
 					String arenaName = line1;
-					Arena foundArena = null;
 
-					for (Arena arena : UltimateGames.arenas)
-					{
-						if (arena.getName().equalsIgnoreCase(arenaName))
-						{
-							foundArena = arena;
-							break;
-						}
-					}
-
-					if (foundArena != null)
+					if (Utils.getArena(arenaName).isPresent())
 					{
 						signData = signData.set(signData.getValue(Keys.SIGN_LINES).get().set(0, Text.of(TextColors.DARK_BLUE, "[UltimateGames]")));
 						signData = signData.set(signData.getValue(Keys.SIGN_LINES).get().set(1, Text.of(TextColors.GREEN, "Arena: ", TextColors.GRAY, arenaName)));
-						UltimateGameSign gameSign = new UltimateGameSign(signLocation, foundArena);
+						UltimateGameSign gameSign = new UltimateGameSign(signLocation, arenaName);
 						UltimateGames.gameSigns.add(gameSign);
 						player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Successfully created UltimateGames sign!"));
-
-						Scheduler scheduler = UltimateGames.game.getScheduler();
-						Task.Builder taskBuilder = scheduler.createTaskBuilder();
-
-						taskBuilder.execute(() -> {
-							int teamASize = gameSign.getTeamA().size();
-							int teamBSize = gameSign.getTeamB().size();
-
-							if (signLocation.getTileEntity().isPresent())
-							{
-								TileEntity tileEntity = signLocation.getTileEntity().get();
-								Optional<SignData> optionalSignData = tileEntity.getOrCreate(SignData.class);
-
-								if (optionalSignData.isPresent())
-								{
-									SignData data = optionalSignData.get();
-									data = data.set(data.getValue(Keys.SIGN_LINES).get().set(2, Text.of(TextColors.BLUE, "Team A: ", TextColors.GRAY, teamASize)));
-									data = data.set(data.getValue(Keys.SIGN_LINES).get().set(3, Text.of(TextColors.RED, "Teeam B: ", TextColors.GRAY, teamBSize)));
-									tileEntity.offer(data);
-								}
-
-								if (!Ember.getMinigame(gameSign.getArena()).isPresent() && gameSign.getArena() instanceof DeathmatchArena && (gameSign.getTeamA().size() >= 1 && gameSign.getTeamB().size() >= 1))
-								{
-									DeathmatchArena dmArena = (DeathmatchArena) gameSign.getArena();
-									List<Player> teamA = Lists.newArrayList();
-									List<Player> teamB = Lists.newArrayList();
-									
-									for(Player p : UltimateGames.game.getServer().getOnlinePlayers())
-									{
-										if(gameSign.getTeamA().contains(p.getUniqueId()))
-										{
-											teamA.add(p);
-										}
-									}
-									
-									for(Player p : UltimateGames.game.getServer().getOnlinePlayers())
-									{
-										if(gameSign.getTeamB().contains(p.getUniqueId()))
-										{
-											teamB.add(p);
-										}
-									}
-									
-									try
-									{
-										new DeathmatchMinigame(dmArena, teamA, teamB);
-									}
-									catch (Exception e)
-									{
-										;
-									}
-									
-									gameSign.getTeamA().clear();
-									gameSign.getTeamB().clear();
-								}
-							}
-						}).interval(1, TimeUnit.MILLISECONDS).name("UltimateGames - Update UltimateGamesSign").submit(UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
+						Utils.startSignService(gameSign, signLocation, arenaName);
 					}
 				}
 				else

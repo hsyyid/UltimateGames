@@ -22,7 +22,7 @@ public class CreateArenaExecutor implements CommandExecutor
 		if (src instanceof Player)
 		{
 			Player player = (Player) src;
-			
+
 			SpawnPoint spawnpoint = new SpawnPoint(player.getLocation().getPosition(), player.getRotation(), player.getWorld());
 
 			if (type.equalsIgnoreCase("Deathmatch") || type.equalsIgnoreCase("dm"))

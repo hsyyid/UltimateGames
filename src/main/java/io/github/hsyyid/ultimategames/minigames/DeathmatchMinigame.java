@@ -99,7 +99,7 @@ public class DeathmatchMinigame implements Minigame
 			for (Player player : this.teamA)
 			{
 				UltimateGames.game.getCommandManager().process(player, "kit " + this.arena.getTeamALoadout());
-				
+
 				if (player.getWorld().getUniqueId().equals(this.arena.getTeamASpawn().getLocation().getExtent().getUniqueId()))
 				{
 					player.setLocation(this.arena.getTeamASpawn().getLocation());
@@ -115,7 +115,7 @@ public class DeathmatchMinigame implements Minigame
 			for (Player player : this.teamB)
 			{
 				UltimateGames.game.getCommandManager().process(player, "kit " + this.arena.getTeamBLoadout());
-				
+
 				if (player.getWorld().getUniqueId().equals(this.arena.getTeamBSpawn().getLocation().getExtent().getUniqueId()))
 				{
 					player.setLocation(this.arena.getTeamBSpawn().getLocation());
