@@ -62,8 +62,6 @@ public class DeathmatchMinigame implements Minigame
 		this.teamB = teamB;
 		this.arena = arena;
 
-		Ember.register(arena, this);
-
 		Objective.Builder objectiveBuilder = Sponge.getRegistry().createBuilder(Objective.Builder.class);
 
 		Text title = Text.of(TextColors.BLUE, "Arena: ", TextColors.GRAY, arena.getName());
@@ -72,7 +70,7 @@ public class DeathmatchMinigame implements Minigame
 		Score teamAScore = mainObjective.getOrCreateScore(Text.of(TextColors.BLUE, "Team A: "));
 		teamAScore.setScore(10);
 
-		teamAScoreTeam = Team.builder()
+		this.teamAScoreTeam = Team.builder()
 			.name("TeamA")
 			.displayName(Text.of("TeamA"))
 			.prefix(Text.of(TextColors.BLUE))
@@ -85,7 +83,7 @@ public class DeathmatchMinigame implements Minigame
 		Score teamBScore = mainObjective.getOrCreateScore(Text.of(TextColors.RED, "Team B: "));
 		teamBScore.setScore(8);
 
-		teamBScoreTeam = Team.builder()
+		this.teamBScoreTeam = Team.builder()
 			.name("TeamB")
 			.displayName(Text.of("TeamB"))
 			.prefix(Text.of(TextColors.RED))
@@ -99,8 +97,8 @@ public class DeathmatchMinigame implements Minigame
 		objectives.add(mainObjective);
 
 		scoreboard = Scoreboard.builder().objectives(objectives).build();
-		scoreboard.registerTeam(teamAScoreTeam);
-		scoreboard.registerTeam(teamBScoreTeam);
+		scoreboard.registerTeam(this.teamAScoreTeam);
+		scoreboard.registerTeam(this.teamBScoreTeam);
 		scoreboard.updateDisplaySlot(mainObjective, DisplaySlots.SIDEBAR);
 
 		Scheduler scheduler = Sponge.getScheduler();
@@ -108,14 +106,16 @@ public class DeathmatchMinigame implements Minigame
 		scheduler.createTaskBuilder().execute(() -> {
 			try
 			{
-				teamAScoreTeam.setSuffix(Text.of(TextColors.GRAY, teamAPoints));
-				teamBScoreTeam.setSuffix(Text.of(TextColors.GRAY, teamBPoints));
+				this.teamAScoreTeam.setSuffix(Text.of(TextColors.GRAY, teamAPoints));
+				this.teamBScoreTeam.setSuffix(Text.of(TextColors.GRAY, teamBPoints));
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
 		}).interval(1, TimeUnit.MILLISECONDS).name("UltimateGames - Update scoreboard").submit(Sponge.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
+
+		Ember.register(arena, this);
 	}
 
 	@Override
@@ -167,9 +167,9 @@ public class DeathmatchMinigame implements Minigame
 			for (Player player : this.teamA)
 			{
 				player.setScoreboard(scoreboard);
-				teamAScoreTeam.addMember(player.getTeamRepresentation());
+				this.teamAScoreTeam.addMember(player.getTeamRepresentation());
 
-				if (!this.arena.getTeamALoadout().equals(""))
+				if (this.arena.getTeamALoadout() != null)
 					UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamALoadout() + " " + player.getName());
 
 				if (player.getWorld().getUniqueId().equals(this.arena.getTeamASpawn().getLocation().getExtent().getUniqueId()))
@@ -187,9 +187,9 @@ public class DeathmatchMinigame implements Minigame
 			for (Player player : this.teamB)
 			{
 				player.setScoreboard(scoreboard);
-				teamBScoreTeam.addMember(player.getTeamRepresentation());
+				this.teamBScoreTeam.addMember(player.getTeamRepresentation());
 
-				if (!this.arena.getTeamBLoadout().equals(""))
+				if (this.arena.getTeamBLoadout() != null)
 					UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamBLoadout() + " " + player.getName());
 
 				if (player.getWorld().getUniqueId().equals(this.arena.getTeamBSpawn().getLocation().getExtent().getUniqueId()))
@@ -319,14 +319,14 @@ public class DeathmatchMinigame implements Minigame
 		{
 			event.setToTransform(event.getToTransform().setLocation(this.arena.getTeamASpawn().getLocation()));
 
-			if (!this.arena.getTeamALoadout().equals(""))
+			if (this.arena.getTeamALoadout() != null)
 				UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamALoadout() + " " + player.getName());
 		}
 		else if (this.teamB.contains(player))
 		{
 			event.setToTransform(event.getToTransform().setLocation(this.arena.getTeamBSpawn().getLocation()));
 
-			if (!this.arena.getTeamBLoadout().equals(""))
+			if (this.arena.getTeamBLoadout() != null)
 				UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamBLoadout() + " " + player.getName());
 		}
 	}
