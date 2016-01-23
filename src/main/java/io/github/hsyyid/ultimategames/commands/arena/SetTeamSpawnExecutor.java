@@ -3,7 +3,7 @@ package io.github.hsyyid.ultimategames.commands.arena;
 import com.dracade.ember.core.Arena;
 import com.dracade.ember.core.SpawnPoint;
 import io.github.hsyyid.ultimategames.UltimateGames;
-import io.github.hsyyid.ultimategames.arenas.DeathmatchArena;
+import io.github.hsyyid.ultimategames.arenas.UltimateGamesArena;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -24,13 +24,13 @@ public class SetTeamSpawnExecutor implements CommandExecutor
 		{
 			Player player = (Player) src;
 
-			DeathmatchArena foundArena = null;
+			UltimateGamesArena foundArena = null;
 
 			for (Arena a : UltimateGames.arenas)
 			{
-				if (a.getName().equalsIgnoreCase(arena) && a instanceof DeathmatchArena)
+				if (a.getName().equalsIgnoreCase(arena) && a instanceof UltimateGamesArena)
 				{
-					foundArena = (DeathmatchArena) a;
+					foundArena = (UltimateGamesArena) a;
 					break;
 				}
 			}

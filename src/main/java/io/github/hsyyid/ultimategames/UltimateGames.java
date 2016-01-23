@@ -3,9 +3,10 @@ package io.github.hsyyid.ultimategames;
 import com.dracade.ember.Ember;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import io.github.hsyyid.ultimategames.arenas.DeathmatchArena;
+import io.github.hsyyid.ultimategames.arenas.UltimateGamesArena;
 import io.github.hsyyid.ultimategames.commands.UltimateGamesExecutor;
 import io.github.hsyyid.ultimategames.commands.arena.CreateArenaExecutor;
+import io.github.hsyyid.ultimategames.commands.arena.DeleteArenaExecutor;
 import io.github.hsyyid.ultimategames.commands.arena.SetTeamLoadoutExecutor;
 import io.github.hsyyid.ultimategames.commands.arena.SetTeamSpawnExecutor;
 import io.github.hsyyid.ultimategames.listeners.BreakBlockListener;
@@ -42,7 +43,7 @@ public class UltimateGames
 	public static Game game;
 	public static ConfigurationNode config;
 	public static ConfigurationLoader<CommentedConfigurationNode> configurationManager;
-	public static List<DeathmatchArena> arenas = Lists.newArrayList();
+	public static List<UltimateGamesArena> arenas = Lists.newArrayList();
 	public static List<UltimateGameSign> gameSigns = Lists.newArrayList();
 
 	@Inject
@@ -89,21 +90,28 @@ public class UltimateGames
 
 		subcommands.put(Arrays.asList("create"), CommandSpec.builder()
 			.description(Text.of("Create Arena Command"))
-			.permission("ultimategames.create")
-			.arguments(GenericArguments.seq(GenericArguments.onlyOne(GenericArguments.string(Text.of("type"))), GenericArguments.onlyOne(GenericArguments.string(Text.of("name")))))
+			.permission("ultimategames.command.create")
+			.arguments(GenericArguments.seq(GenericArguments.onlyOne(GenericArguments.string(Text.of("type"))), GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))), GenericArguments.onlyOne(GenericArguments.integer(Text.of("team size")))))
 			.executor(new CreateArenaExecutor())
+			.build());
+
+		subcommands.put(Arrays.asList("delete", "remove"), CommandSpec.builder()
+			.description(Text.of("Remove Arena Command"))
+			.permission("ultimategames.command.remove")
+			.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+			.executor(new DeleteArenaExecutor())
 			.build());
 
 		subcommands.put(Arrays.asList("setteamspawn"), CommandSpec.builder()
 			.description(Text.of("Set Team Spawn Command"))
-			.permission("ultimategames.teamspawn.set")
+			.permission("ultimategames.command.teamspawn.set")
 			.arguments(GenericArguments.seq(GenericArguments.onlyOne(GenericArguments.string(Text.of("arena"))), GenericArguments.onlyOne(GenericArguments.string(Text.of("team")))))
 			.executor(new SetTeamSpawnExecutor())
 			.build());
 
 		subcommands.put(Arrays.asList("setteamloadout"), CommandSpec.builder()
 			.description(Text.of("Set Team Loadout Command"))
-			.permission("ultimategames.teamloadout.set")
+			.permission("ultimategames.command.teamloadout.set")
 			.arguments(GenericArguments.seq(GenericArguments.onlyOne(GenericArguments.string(Text.of("arena"))), GenericArguments.onlyOne(GenericArguments.string(Text.of("team"))), GenericArguments.onlyOne(GenericArguments.remainingJoinedStrings(Text.of("loadout")))))
 			.executor(new SetTeamLoadoutExecutor())
 			.build());
@@ -138,7 +146,7 @@ public class UltimateGames
 		{
 			try
 			{
-				UltimateGames.arenas = Arrays.asList(Ember.serializer().gson().fromJson(json, DeathmatchArena[].class));
+				UltimateGames.arenas = Arrays.asList(Ember.serializer().gson().fromJson(json, UltimateGamesArena[].class));
 			}
 			catch (Exception e)
 			{
@@ -154,8 +162,8 @@ public class UltimateGames
 			try
 			{
 				UltimateGames.gameSigns = Arrays.asList(Ember.serializer().gson().fromJson(json, UltimateGameSign[].class));
-				
-				for(UltimateGameSign gameSign : UltimateGames.gameSigns)
+
+				for (UltimateGameSign gameSign : UltimateGames.gameSigns)
 				{
 					Utils.startSignService(gameSign, gameSign.getLocation(), gameSign.getArena());
 				}

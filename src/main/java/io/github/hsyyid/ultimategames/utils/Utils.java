@@ -2,7 +2,7 @@ package io.github.hsyyid.ultimategames.utils;
 
 import com.google.common.collect.Lists;
 import io.github.hsyyid.ultimategames.UltimateGames;
-import io.github.hsyyid.ultimategames.arenas.DeathmatchArena;
+import io.github.hsyyid.ultimategames.arenas.UltimateGamesArena;
 import io.github.hsyyid.ultimategames.minigames.DeathmatchMinigame;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.data.key.Keys;
@@ -21,19 +21,19 @@ import java.util.concurrent.TimeUnit;
 
 public class Utils
 {
-	public static Optional<DeathmatchArena> getArena(String arena)
+	public static Optional<UltimateGamesArena> getArena(String arena)
 	{
-		for(DeathmatchArena dmArena : UltimateGames.arenas)
+		for (UltimateGamesArena dmArena : UltimateGames.arenas)
 		{
-			if(dmArena.getName().equalsIgnoreCase(arena))
+			if (dmArena.getName().equalsIgnoreCase(arena))
 			{
 				return Optional.of(dmArena);
 			}
 		}
-		
+
 		return Optional.empty();
 	}
-	
+
 	public static void startSignService(UltimateGameSign gameSign, Location<World> signLocation, String arenaName)
 	{
 		Scheduler scheduler = UltimateGames.game.getScheduler();
@@ -56,39 +56,43 @@ public class Utils
 					tileEntity.offer(data);
 				}
 
-				if (!Utils.getArena(arenaName).isPresent() && (gameSign.getTeamA().size() >= 1 && gameSign.getTeamB().size() >= 1))
+				if (!Utils.getArena(arenaName).isPresent())
 				{
-					DeathmatchArena dmArena = Utils.getArena(arenaName).get();
-					List<Player> teamA = Lists.newArrayList();
-					List<Player> teamB = Lists.newArrayList();
+					UltimateGamesArena dmArena = Utils.getArena(arenaName).get();
 
-					for (Player p : UltimateGames.game.getServer().getOnlinePlayers())
+					if (gameSign.getTeamA().size() == dmArena.getTeamSize() && gameSign.getTeamA().size() == gameSign.getTeamB().size())
 					{
-						if (gameSign.getTeamA().contains(p.getUniqueId().toString()))
+						List<Player> teamA = Lists.newArrayList();
+						List<Player> teamB = Lists.newArrayList();
+
+						for (Player p : UltimateGames.game.getServer().getOnlinePlayers())
 						{
-							teamA.add(p);
+							if (gameSign.getTeamA().contains(p.getUniqueId().toString()))
+							{
+								teamA.add(p);
+							}
 						}
-					}
 
-					for (Player p : UltimateGames.game.getServer().getOnlinePlayers())
-					{
-						if (gameSign.getTeamB().contains(p.getUniqueId().toString()))
+						for (Player p : UltimateGames.game.getServer().getOnlinePlayers())
 						{
-							teamB.add(p);
+							if (gameSign.getTeamB().contains(p.getUniqueId().toString()))
+							{
+								teamB.add(p);
+							}
 						}
-					}
 
-					try
-					{
-						new DeathmatchMinigame(dmArena, teamA, teamB);
-					}
-					catch (Exception e)
-					{
-						;
-					}
+						try
+						{
+							new DeathmatchMinigame(dmArena, teamA, teamB);
+						}
+						catch (Exception e)
+						{
+							;
+						}
 
-					gameSign.getTeamA().clear();
-					gameSign.getTeamB().clear();
+						gameSign.getTeamA().clear();
+						gameSign.getTeamB().clear();
+					}
 				}
 			}
 		}).interval(1, TimeUnit.MILLISECONDS).name("UltimateGames - Update UltimateGamesSign").submit(UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());

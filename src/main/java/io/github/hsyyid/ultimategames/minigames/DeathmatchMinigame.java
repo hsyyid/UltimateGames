@@ -6,7 +6,8 @@ import com.dracade.ember.core.events.minigame.MinigameStartedEvent;
 import com.dracade.ember.core.events.minigame.MinigameStoppedEvent;
 import com.google.common.collect.Lists;
 import io.github.hsyyid.ultimategames.UltimateGames;
-import io.github.hsyyid.ultimategames.arenas.DeathmatchArena;
+import io.github.hsyyid.ultimategames.arenas.UltimateGamesArena;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
@@ -29,7 +30,7 @@ public class DeathmatchMinigame implements Minigame
 {
 	private List<Player> teamA;
 	private List<Player> teamB;
-	private DeathmatchArena arena;
+	private UltimateGamesArena arena;
 	private int teamAPoints;
 	private int teamBPoints;
 
@@ -41,7 +42,7 @@ public class DeathmatchMinigame implements Minigame
 	 * @param teamB the players on team B.
 	 * @throws Exception If the match failed to register.
 	 */
-	public DeathmatchMinigame(DeathmatchArena arena, List<Player> teamA, List<Player> teamB) throws Exception
+	public DeathmatchMinigame(UltimateGamesArena arena, List<Player> teamA, List<Player> teamB) throws Exception
 	{
 		this.teamA = teamA;
 		this.teamB = teamB;
@@ -98,7 +99,8 @@ public class DeathmatchMinigame implements Minigame
 
 			for (Player player : this.teamA)
 			{
-				UltimateGames.game.getCommandManager().process(player, "kit " + this.arena.getTeamALoadout());
+				if (!this.arena.getTeamALoadout().equals(""))
+					UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamALoadout() + " " + player.getName());
 
 				if (player.getWorld().getUniqueId().equals(this.arena.getTeamASpawn().getLocation().getExtent().getUniqueId()))
 				{
@@ -114,7 +116,8 @@ public class DeathmatchMinigame implements Minigame
 
 			for (Player player : this.teamB)
 			{
-				UltimateGames.game.getCommandManager().process(player, "kit " + this.arena.getTeamBLoadout());
+				if (!this.arena.getTeamBLoadout().equals(""))
+					UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamBLoadout() + " " + player.getName());
 
 				if (player.getWorld().getUniqueId().equals(this.arena.getTeamBSpawn().getLocation().getExtent().getUniqueId()))
 				{
@@ -240,12 +243,16 @@ public class DeathmatchMinigame implements Minigame
 		if (this.teamA.contains(player))
 		{
 			event.setToTransform(event.getToTransform().setLocation(this.arena.getTeamASpawn().getLocation()));
-			UltimateGames.game.getCommandManager().process(player, "kit " + this.arena.getTeamALoadout());
+
+			if (!this.arena.getTeamALoadout().equals(""))
+				UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamALoadout() + " " + player.getName());
 		}
 		else if (this.teamB.contains(player))
 		{
 			event.setToTransform(event.getToTransform().setLocation(this.arena.getTeamBSpawn().getLocation()));
-			UltimateGames.game.getCommandManager().process(player, "kit " + this.arena.getTeamBLoadout());
+
+			if (!this.arena.getTeamBLoadout().equals(""))
+				UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamBLoadout() + " " + player.getName());
 		}
 	}
 }

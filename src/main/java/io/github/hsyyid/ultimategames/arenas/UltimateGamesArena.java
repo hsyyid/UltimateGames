@@ -3,16 +3,18 @@ package io.github.hsyyid.ultimategames.arenas;
 import com.dracade.ember.core.Arena;
 import com.dracade.ember.core.SpawnPoint;
 
-public class DeathmatchArena extends Arena
+public class UltimateGamesArena extends Arena
 {
 	private SpawnPoint teamASpawn;
 	private SpawnPoint teamBSpawn;
 	private String teamALoadout;
 	private String teamBLoadout;
+	private int teamSize;
 
-	public DeathmatchArena(String name, SpawnPoint spawn)
+	public UltimateGamesArena(String name, SpawnPoint spawn, int teamSize)
 	{
 		super(name, spawn);
+		this.teamSize = teamSize;
 	}
 
 	public void setTeamASpawn(SpawnPoint teamASpawn)
@@ -35,6 +37,11 @@ public class DeathmatchArena extends Arena
 		this.teamBLoadout = teamBLoadout;
 	}
 
+	public void setTeamSize(int teamSize)
+	{
+		this.teamSize = teamSize;
+	}
+
 	public SpawnPoint getTeamASpawn()
 	{
 		return teamASpawn;
@@ -53,5 +60,10 @@ public class DeathmatchArena extends Arena
 	public String getTeamBLoadout()
 	{
 		return teamBLoadout;
+	}
+
+	public int getTeamSize()
+	{
+		return teamSize;
 	}
 }

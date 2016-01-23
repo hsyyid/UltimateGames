@@ -2,7 +2,8 @@ package io.github.hsyyid.ultimategames.commands.arena;
 
 import com.dracade.ember.core.SpawnPoint;
 import io.github.hsyyid.ultimategames.UltimateGames;
-import io.github.hsyyid.ultimategames.arenas.DeathmatchArena;
+import io.github.hsyyid.ultimategames.arenas.UltimateGamesArena;
+import io.github.hsyyid.ultimategames.utils.Utils;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -18,16 +19,22 @@ public class CreateArenaExecutor implements CommandExecutor
 	{
 		String type = ctx.<String> getOne("type").get();
 		String name = ctx.<String> getOne("name").get();
+		int teamSize = ctx.<Integer> getOne("team size").get();
 
 		if (src instanceof Player)
 		{
 			Player player = (Player) src;
-
 			SpawnPoint spawnpoint = new SpawnPoint(player.getLocation().getPosition(), player.getRotation(), player.getWorld());
+
+			if (Utils.getArena(name).isPresent())
+			{
+				src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "An arena with this name already exists!"));
+				return CommandResult.success();
+			}
 
 			if (type.equalsIgnoreCase("Deathmatch") || type.equalsIgnoreCase("dm"))
 			{
-				DeathmatchArena arena = new DeathmatchArena(name, spawnpoint);
+				UltimateGamesArena arena = new UltimateGamesArena(name, spawnpoint, teamSize);
 				UltimateGames.arenas.add(arena);
 				player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Created deathmatch arena. Spawn set to your current location!"));
 				player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.RED, "Do not forget to set spawns for both team a and b!"));
