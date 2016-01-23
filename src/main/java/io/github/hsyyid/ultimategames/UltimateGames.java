@@ -11,6 +11,7 @@ import io.github.hsyyid.ultimategames.commands.arena.SetTeamLoadoutExecutor;
 import io.github.hsyyid.ultimategames.commands.arena.SetTeamSpawnExecutor;
 import io.github.hsyyid.ultimategames.listeners.BreakBlockListener;
 import io.github.hsyyid.ultimategames.listeners.InteractBlockListener;
+import io.github.hsyyid.ultimategames.listeners.PlayerDisconnectListener;
 import io.github.hsyyid.ultimategames.listeners.SignChangeListener;
 import io.github.hsyyid.ultimategames.utils.ConfigManager;
 import io.github.hsyyid.ultimategames.utils.UltimateGameSign;
@@ -128,6 +129,7 @@ public class UltimateGames
 		game.getEventManager().registerListeners(this, new InteractBlockListener());
 		game.getEventManager().registerListeners(this, new SignChangeListener());
 		game.getEventManager().registerListeners(this, new BreakBlockListener());
+		game.getEventManager().registerListeners(this, new PlayerDisconnectListener());
 
 		getLogger().info("-----------------------------");
 		getLogger().info("UltimateGames was made by HassanS6000!");

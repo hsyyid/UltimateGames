@@ -5,6 +5,7 @@ import com.dracade.ember.core.Minigame;
 import com.dracade.ember.core.events.minigame.MinigameStartedEvent;
 import com.dracade.ember.core.events.minigame.MinigameStoppedEvent;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import io.github.hsyyid.ultimategames.UltimateGames;
 import io.github.hsyyid.ultimategames.arenas.UltimateGamesArena;
 import org.spongepowered.api.Sponge;
@@ -17,11 +18,20 @@ import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.scoreboard.Score;
+import org.spongepowered.api.scoreboard.Scoreboard;
+import org.spongepowered.api.scoreboard.Team;
+import org.spongepowered.api.scoreboard.Visibilities;
+import org.spongepowered.api.scoreboard.critieria.Criteria;
+import org.spongepowered.api.scoreboard.displayslot.DisplaySlots;
+import org.spongepowered.api.scoreboard.objective.Objective;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +43,10 @@ public class DeathmatchMinigame implements Minigame
 	private UltimateGamesArena arena;
 	private int teamAPoints;
 	private int teamBPoints;
+
+	private Scoreboard scoreboard;
+	private Team teamAScoreTeam;
+	private Team teamBScoreTeam;
 
 	/**
 	 * Creates a new DeathmatchMinigame instance.
@@ -49,6 +63,59 @@ public class DeathmatchMinigame implements Minigame
 		this.arena = arena;
 
 		Ember.register(arena, this);
+
+		Objective.Builder objectiveBuilder = Sponge.getRegistry().createBuilder(Objective.Builder.class);
+
+		Text title = Text.of(TextColors.BLUE, "Arena: ", TextColors.GRAY, arena.getName());
+		final Objective mainObjective = objectiveBuilder.name("<Arena Scoreboard>").criterion(Criteria.DUMMY).displayName(title).build();
+
+		Score teamAScore = mainObjective.getOrCreateScore(Text.of(TextColors.BLUE, "Team A: "));
+		teamAScore.setScore(10);
+
+		teamAScoreTeam = Team.builder()
+			.name("TeamA")
+			.displayName(Text.of("TeamA"))
+			.prefix(Text.of(TextColors.BLUE))
+			.members(Sets.newHashSet(Text.of(TextColors.BLUE, "Team A: ")))
+			.nameTagVisibility(Visibilities.ALL)
+			.canSeeFriendlyInvisibles(true)
+			.allowFriendlyFire(false)
+			.build();
+
+		Score teamBScore = mainObjective.getOrCreateScore(Text.of(TextColors.RED, "Team B: "));
+		teamBScore.setScore(8);
+
+		teamBScoreTeam = Team.builder()
+			.name("TeamB")
+			.displayName(Text.of("TeamB"))
+			.prefix(Text.of(TextColors.RED))
+			.members(Sets.newHashSet(Text.of(TextColors.RED, "Team B: ")))
+			.nameTagVisibility(Visibilities.ALL)
+			.canSeeFriendlyInvisibles(true)
+			.allowFriendlyFire(false)
+			.build();
+
+		List<Objective> objectives = new ArrayList<Objective>();
+		objectives.add(mainObjective);
+
+		scoreboard = Scoreboard.builder().objectives(objectives).build();
+		scoreboard.registerTeam(teamAScoreTeam);
+		scoreboard.registerTeam(teamBScoreTeam);
+		scoreboard.updateDisplaySlot(mainObjective, DisplaySlots.SIDEBAR);
+
+		Scheduler scheduler = Sponge.getScheduler();
+
+		scheduler.createTaskBuilder().execute(() -> {
+			try
+			{
+				teamAScoreTeam.setSuffix(Text.of(TextColors.GRAY, teamAPoints));
+				teamBScoreTeam.setSuffix(Text.of(TextColors.GRAY, teamBPoints));
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}).interval(1, TimeUnit.MILLISECONDS).name("UltimateGames - Update scoreboard").submit(Sponge.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
 	}
 
 	@Override
@@ -99,6 +166,9 @@ public class DeathmatchMinigame implements Minigame
 
 			for (Player player : this.teamA)
 			{
+				player.setScoreboard(scoreboard);
+				teamAScoreTeam.addMember(player.getTeamRepresentation());
+
 				if (!this.arena.getTeamALoadout().equals(""))
 					UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamALoadout() + " " + player.getName());
 
@@ -116,6 +186,9 @@ public class DeathmatchMinigame implements Minigame
 
 			for (Player player : this.teamB)
 			{
+				player.setScoreboard(scoreboard);
+				teamBScoreTeam.addMember(player.getTeamRepresentation());
+
 				if (!this.arena.getTeamBLoadout().equals(""))
 					UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamBLoadout() + " " + player.getName());
 
@@ -154,6 +227,8 @@ public class DeathmatchMinigame implements Minigame
 		{
 			for (Player player : players())
 			{
+				player.setScoreboard(null);
+
 				if (this.teamAPoints > this.teamBPoints)
 					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Team A has won the Deathmatch!"));
 				else if (this.teamBPoints > this.teamAPoints)
@@ -253,6 +328,31 @@ public class DeathmatchMinigame implements Minigame
 
 			if (!this.arena.getTeamBLoadout().equals(""))
 				UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamBLoadout() + " " + player.getName());
+		}
+	}
+
+	@Listener
+	public void onPlayerDisconnect(ClientConnectionEvent.Disconnect event)
+	{
+		if (players().contains(event.getTargetEntity()))
+		{
+			for (Player player : this.teamA)
+			{
+				if (player.getUniqueId().equals(event.getTargetEntity().getUniqueId()))
+				{
+					this.teamA.remove(event.getTargetEntity().getUniqueId());
+					event.getTargetEntity().setLocation(this.arena.getSpawn().getLocation());
+				}
+			}
+
+			for (Player player : this.teamB)
+			{
+				if (player.getUniqueId().equals(event.getTargetEntity().getUniqueId()))
+				{
+					this.teamB.remove(event.getTargetEntity().getUniqueId());
+					event.getTargetEntity().setLocation(this.arena.getSpawn().getLocation());
+				}
+			}
 		}
 	}
 }
