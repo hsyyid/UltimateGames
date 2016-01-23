@@ -52,7 +52,7 @@ public class Utils
 				{
 					SignData data = optionalSignData.get();
 					data = data.set(data.getValue(Keys.SIGN_LINES).get().set(2, Text.of(TextColors.BLUE, "Team A: ", TextColors.GRAY, teamASize)));
-					data = data.set(data.getValue(Keys.SIGN_LINES).get().set(3, Text.of(TextColors.RED, "Teeam B: ", TextColors.GRAY, teamBSize)));
+					data = data.set(data.getValue(Keys.SIGN_LINES).get().set(3, Text.of(TextColors.RED, "Team B: ", TextColors.GRAY, teamBSize)));
 					tileEntity.offer(data);
 				}
 
