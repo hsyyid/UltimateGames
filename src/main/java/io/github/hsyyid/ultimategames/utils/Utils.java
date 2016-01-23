@@ -1,9 +1,11 @@
 package io.github.hsyyid.ultimategames.utils;
 
+import com.dracade.ember.Ember;
 import com.google.common.collect.Lists;
 import io.github.hsyyid.ultimategames.UltimateGames;
 import io.github.hsyyid.ultimategames.arenas.UltimateGamesArena;
 import io.github.hsyyid.ultimategames.minigames.DeathmatchMinigame;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
@@ -56,7 +58,7 @@ public class Utils
 					tileEntity.offer(data);
 				}
 
-				if (!Utils.getArena(arenaName).isPresent())
+				if (Utils.getArena(arenaName).isPresent() && !Ember.getMinigame(Utils.getArena(arenaName).get()).isPresent())
 				{
 					UltimateGamesArena dmArena = Utils.getArena(arenaName).get();
 
@@ -94,7 +96,21 @@ public class Utils
 						gameSign.getTeamB().clear();
 					}
 				}
+				else if (!Utils.getArena(arenaName).isPresent())
+				{
+					for (Task task : Sponge.getScheduler().getTasksByName("UltimateGames - Update UltimateGamesSign " + gameSign.getUuid()))
+					{
+						task.cancel();
+					}
+				}
 			}
-		}).interval(1, TimeUnit.MILLISECONDS).name("UltimateGames - Update UltimateGamesSign").submit(UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
+			else
+			{
+				for (Task task : Sponge.getScheduler().getTasksByName("UltimateGames - Update UltimateGamesSign " + gameSign.getUuid()))
+				{
+					task.cancel();
+				}
+			}
+		}).interval(1, TimeUnit.MILLISECONDS).name("UltimateGames - Update UltimateGamesSign " + gameSign.getUuid()).submit(UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
 	}
 }

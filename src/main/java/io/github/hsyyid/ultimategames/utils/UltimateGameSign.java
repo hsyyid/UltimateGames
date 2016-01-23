@@ -12,7 +12,8 @@ public class UltimateGameSign
 {
 	private Location<World> location;
 	private String arena;
-
+	private String uuid;
+	
 	public List<String> teamA;
 	public List<String> teamB;
 
@@ -20,6 +21,7 @@ public class UltimateGameSign
 	{
 		this.location = location;
 		this.arena = arena;
+		this.uuid = UUID.randomUUID().toString();
 		this.teamA = Lists.newArrayList();
 		this.teamB = Lists.newArrayList();
 	}
@@ -69,5 +71,10 @@ public class UltimateGameSign
 		}
 
 		return allPlayers;
+	}
+	
+	public String getUuid()
+	{
+		return uuid;
 	}
 }
