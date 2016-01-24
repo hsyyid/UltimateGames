@@ -360,11 +360,9 @@ public class DeathmatchMinigame implements Minigame
 		{
 			if (entitySnapshot.getType() == EntityTypes.PLAYER)
 			{
-				Entity entity = entitySnapshot.restore().orElse(null);
-
-				if (entity != null)
+				if (Sponge.getServer().getPlayer(entitySnapshot.getUniqueId().get()).isPresent())
 				{
-					Player player = (Player) entity;
+					Player player = Sponge.getServer().getPlayer(entitySnapshot.getUniqueId().get()).get();
 					
 					if (this.teamA.contains(player))
 					{
