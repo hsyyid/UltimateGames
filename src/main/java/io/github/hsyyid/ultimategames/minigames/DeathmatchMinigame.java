@@ -11,6 +11,8 @@ import io.github.hsyyid.ultimategames.arenas.UltimateGamesArena;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntitySnapshot;
+import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
@@ -21,7 +23,6 @@ import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
-import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
@@ -337,6 +338,7 @@ public class DeathmatchMinigame implements Minigame
 		}
 	}
 
+	@Listener
 	public void onPlayerRespawn(RespawnPlayerEvent event)
 	{
 		Player player = event.getTargetEntity();
@@ -352,17 +354,30 @@ public class DeathmatchMinigame implements Minigame
 	}
 
 	@Listener
-	public void onPlayerSpawn(SpawnEntityEvent event, @First Player player)
+	public void onPlayerSpawn(SpawnEntityEvent event)
 	{
-		if (this.teamA.contains(player))
+		for (EntitySnapshot entitySnapshot : event.getEntitySnapshots())
 		{
-			if (this.arena.getTeamALoadout() != null)
-				UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamALoadout() + " " + player.getName());
-		}
-		else if (this.teamB.contains(player))
-		{
-			if (this.arena.getTeamBLoadout() != null)
-				UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamBLoadout() + " " + player.getName());
+			if (entitySnapshot.getType() == EntityTypes.PLAYER)
+			{
+				Entity entity = entitySnapshot.restore().orElse(null);
+
+				if (entity != null)
+				{
+					Player player = (Player) entity;
+					
+					if (this.teamA.contains(player))
+					{
+						if (this.arena.getTeamALoadout() != null)
+							UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamALoadout() + " " + player.getName());
+					}
+					else if (this.teamB.contains(player))
+					{
+						if (this.arena.getTeamBLoadout() != null)
+							UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamBLoadout() + " " + player.getName());
+					}
+				}
+			}
 		}
 	}
 
