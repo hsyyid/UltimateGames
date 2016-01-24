@@ -7,6 +7,7 @@ public class UltimateGamesArena extends Arena
 {
 	private SpawnPoint teamASpawn;
 	private SpawnPoint teamBSpawn;
+	private SpawnPoint spectatorSpawn;
 	private String teamALoadout;
 	private String teamBLoadout;
 	private int teamSize;
@@ -32,6 +33,11 @@ public class UltimateGamesArena extends Arena
 	public void setTeamBSpawn(SpawnPoint teamBSpawn)
 	{
 		this.teamBSpawn = teamBSpawn;
+	}
+	
+	public void setSpectatorSpawn(SpawnPoint spectatorSpawn)
+	{
+		this.spectatorSpawn = spectatorSpawn;
 	}
 
 	public void setTeamBLoadout(String teamBLoadout)
@@ -62,6 +68,11 @@ public class UltimateGamesArena extends Arena
 	public SpawnPoint getTeamBSpawn()
 	{
 		return teamBSpawn;
+	}
+	
+	public SpawnPoint getSpectatorSpawn()
+	{
+		return spectatorSpawn;
 	}
 
 	public String getTeamBLoadout()

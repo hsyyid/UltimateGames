@@ -13,12 +13,11 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-public class SetTeamSpawnExecutor implements CommandExecutor
+public class SetSpectatorSpawnExecutor implements CommandExecutor
 {
 	public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException
 	{
 		String arena = ctx.<String> getOne("arena").get();
-		String team = ctx.<String> getOne("team").get();
 
 		if (src instanceof Player)
 		{
@@ -29,22 +28,8 @@ public class SetTeamSpawnExecutor implements CommandExecutor
 				UltimateGamesArena foundArena = Utils.getArena(arena).get();
 				UltimateGames.arenas.remove(foundArena);
 				SpawnPoint spawnpoint = new SpawnPoint(player.getLocation().getPosition(), player.getRotation(), player.getWorld());
-
-				if (team.equalsIgnoreCase("a"))
-				{
-					foundArena.setTeamASpawn(spawnpoint);
-					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Spawn for team A set to your current location!"));
-				}
-				else if (team.equalsIgnoreCase("b"))
-				{
-					foundArena.setTeamBSpawn(spawnpoint);
-					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Spawn for team B set to your current location!"));
-				}
-				else
-				{
-					player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.DARK_RED, "Error! ", TextColors.RED, "You may only specify team A or team B!"));
-				}
-
+				foundArena.setSpectatorSpawn(spawnpoint);
+				player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Spectator spawn set to your current location!"));
 				UltimateGames.arenas.add(foundArena);
 			}
 			else

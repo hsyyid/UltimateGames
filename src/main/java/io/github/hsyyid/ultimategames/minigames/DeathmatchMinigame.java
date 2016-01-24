@@ -43,8 +43,8 @@ import java.util.concurrent.TimeUnit;
 
 public class DeathmatchMinigame implements Minigame
 {
-	private List<Player> teamA;
-	private List<Player> teamB;
+	public List<Player> teamA;
+	public List<Player> teamB;
 	private UltimateGamesArena arena;
 	private int teamAPoints;
 	private int teamBPoints;

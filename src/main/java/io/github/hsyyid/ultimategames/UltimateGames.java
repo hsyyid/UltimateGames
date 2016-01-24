@@ -4,9 +4,11 @@ import com.dracade.ember.Ember;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import io.github.hsyyid.ultimategames.arenas.UltimateGamesArena;
+import io.github.hsyyid.ultimategames.commands.LeaveGameExecutor;
 import io.github.hsyyid.ultimategames.commands.UltimateGamesExecutor;
 import io.github.hsyyid.ultimategames.commands.arena.CreateArenaExecutor;
 import io.github.hsyyid.ultimategames.commands.arena.DeleteArenaExecutor;
+import io.github.hsyyid.ultimategames.commands.arena.SetSpectatorSpawnExecutor;
 import io.github.hsyyid.ultimategames.commands.arena.SetTeamLoadoutExecutor;
 import io.github.hsyyid.ultimategames.commands.arena.SetTeamSpawnExecutor;
 import io.github.hsyyid.ultimategames.listeners.BreakBlockListener;
@@ -88,10 +90,10 @@ public class UltimateGames
 		}
 
 		HashMap<List<String>, CommandSpec> subcommands = new HashMap<List<String>, CommandSpec>();
-
+		
 		subcommands.put(Arrays.asList("create"), CommandSpec.builder()
 			.description(Text.of("Create Arena Command"))
-			.permission("ultimategames.command.create")
+			.permission("ultimategames.create.command")
 			.arguments(GenericArguments.seq(GenericArguments.onlyOne(
 				GenericArguments.string(Text.of("type"))),
 				GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))), 
@@ -102,23 +104,36 @@ public class UltimateGames
 
 		subcommands.put(Arrays.asList("delete", "remove"), CommandSpec.builder()
 			.description(Text.of("Remove Arena Command"))
-			.permission("ultimategames.command.remove")
+			.permission("ultimategames.remove.command")
 			.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
 			.executor(new DeleteArenaExecutor())
 			.build());
 
 		subcommands.put(Arrays.asList("setteamspawn"), CommandSpec.builder()
 			.description(Text.of("Set Team Spawn Command"))
-			.permission("ultimategames.command.teamspawn.set")
+			.permission("ultimategames.teamspawn.set.command")
 			.arguments(GenericArguments.seq(GenericArguments.onlyOne(GenericArguments.string(Text.of("arena"))), GenericArguments.onlyOne(GenericArguments.string(Text.of("team")))))
 			.executor(new SetTeamSpawnExecutor())
 			.build());
 
+		subcommands.put(Arrays.asList("setspectatorspawn"), CommandSpec.builder()
+			.description(Text.of("Set Spectator Spawn Command"))
+			.permission("ultimategames.spectatorspawn.set.command")
+			.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("arena"))))
+			.executor(new SetSpectatorSpawnExecutor())
+			.build());
+
 		subcommands.put(Arrays.asList("setteamloadout"), CommandSpec.builder()
 			.description(Text.of("Set Team Loadout Command"))
-			.permission("ultimategames.command.teamloadout.set")
+			.permission("ultimategames.teamloadout.set.command")
 			.arguments(GenericArguments.seq(GenericArguments.onlyOne(GenericArguments.string(Text.of("arena"))), GenericArguments.onlyOne(GenericArguments.string(Text.of("team"))), GenericArguments.onlyOne(GenericArguments.remainingJoinedStrings(Text.of("loadout")))))
 			.executor(new SetTeamLoadoutExecutor())
+			.build());
+
+		subcommands.put(Arrays.asList("leavegame"), CommandSpec.builder()
+			.description(Text.of("Leave Game Command"))
+			.permission("ultimategames.leavegame.command")
+			.executor(new LeaveGameExecutor())
 			.build());
 
 		CommandSpec ultimateGamesCommandSpec = CommandSpec.builder()

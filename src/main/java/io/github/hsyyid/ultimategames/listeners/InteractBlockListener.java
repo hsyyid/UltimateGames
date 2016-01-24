@@ -1,7 +1,10 @@
 package io.github.hsyyid.ultimategames.listeners;
 
+import com.dracade.ember.Ember;
 import io.github.hsyyid.ultimategames.UltimateGames;
+import io.github.hsyyid.ultimategames.arenas.UltimateGamesArena;
 import io.github.hsyyid.ultimategames.utils.UltimateGameSign;
+import io.github.hsyyid.ultimategames.utils.Utils;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -40,26 +43,43 @@ public class InteractBlockListener
 				{
 					if (player.hasPermission("ultimategames.signs.use"))
 					{
-						if (foundSign.getTeamA().contains(player.getUniqueId().toString()) || foundSign.getTeamB().contains(player.getUniqueId().toString()))
+						if (Utils.getArena(foundSign.getArena()).isPresent() && !Ember.getMinigame(Utils.getArena(foundSign.getArena()).get()).isPresent())
 						{
-							player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.DARK_RED, "Error! ", TextColors.RED, "You are already in queue!"));
-						}
-						else
-						{
-							if (foundSign.getTeamA().size() == 0)
+							if (foundSign.getTeamA().contains(player.getUniqueId().toString()) || foundSign.getTeamB().contains(player.getUniqueId().toString()))
 							{
-								foundSign.teamA.add(player.getUniqueId().toString());
-								player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena ", TextColors.GRAY, foundSign.getArena()));
-							}
-							else if (foundSign.getTeamA().size() < foundSign.getTeamB().size())
-							{
-								foundSign.teamA.add(player.getUniqueId().toString());
-								player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena ", TextColors.GRAY, foundSign.getArena()));
+								player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.DARK_RED, "Error! ", TextColors.RED, "You are already in queue!"));
 							}
 							else
 							{
-								foundSign.teamB.add(player.getUniqueId().toString());
-								player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena ", TextColors.GRAY, foundSign.getArena()));
+								if (foundSign.getTeamA().size() == 0)
+								{
+									foundSign.teamA.add(player.getUniqueId().toString());
+									player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena ", TextColors.GRAY, foundSign.getArena()));
+								}
+								else if (foundSign.getTeamA().size() < foundSign.getTeamB().size())
+								{
+									foundSign.teamA.add(player.getUniqueId().toString());
+									player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena ", TextColors.GRAY, foundSign.getArena()));
+								}
+								else
+								{
+									foundSign.teamB.add(player.getUniqueId().toString());
+									player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Joined UltimateGames queue to play on arena ", TextColors.GRAY, foundSign.getArena()));
+								}
+							}
+						}
+						else if (Utils.getArena(foundSign.getArena()).isPresent() && Ember.getMinigame(Utils.getArena(foundSign.getArena()).get()).isPresent())
+						{
+							UltimateGamesArena arena = Utils.getArena(foundSign.getArena()).get();
+							Location<World> spectatorSpawn = arena.getSpectatorSpawn().getLocation();
+
+							if (player.getWorld().getUniqueId().equals(spectatorSpawn.getExtent().getUniqueId()))
+							{
+								player.setLocation(spectatorSpawn);
+							}
+							else
+							{
+								player.transferToWorld(spectatorSpawn.getExtent().getUniqueId(), spectatorSpawn.getPosition());
 							}
 						}
 					}
