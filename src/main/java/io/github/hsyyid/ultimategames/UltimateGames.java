@@ -40,7 +40,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-@Plugin(id = "UltimateGames", name = "UltimateGames", version = "0.2", dependencies = "required-after:EMBER")
+@Plugin(id = "UltimateGames", name = "UltimateGames", version = "0.3", dependencies = "required-after:EMBER")
 public class UltimateGames
 {
 	public static Game game;

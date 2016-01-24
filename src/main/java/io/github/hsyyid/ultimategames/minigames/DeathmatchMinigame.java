@@ -15,7 +15,6 @@ import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
@@ -344,27 +343,20 @@ public class DeathmatchMinigame implements Minigame
 		if (this.teamA.contains(player))
 		{
 			event.setToTransform(event.getToTransform().setLocation(this.arena.getTeamASpawn().getLocation()));
+
+			Sponge.getScheduler().createTaskBuilder().execute(() -> {
+				if (this.arena.getTeamALoadout() != null)
+					UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamALoadout() + " " + player.getName());
+			}).delayTicks(10).name("UltimateGames - Give Player Loadout").submit(UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
 		}
 		else if (this.teamB.contains(player))
 		{
 			event.setToTransform(event.getToTransform().setLocation(this.arena.getTeamBSpawn().getLocation()));
-		}
-	}
 
-	@Listener(order = Order.LAST)
-	public void afterPlayerRespawn(RespawnPlayerEvent event)
-	{
-		Player player = event.getTargetEntity();
-
-		if (this.teamA.contains(player))
-		{
-			if (this.arena.getTeamALoadout() != null)
-				UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamALoadout() + " " + player.getName());
-		}
-		else if (this.teamB.contains(player))
-		{
-			if (this.arena.getTeamBLoadout() != null)
-				UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamBLoadout() + " " + player.getName());
+			Sponge.getScheduler().createTaskBuilder().execute(() -> {
+				if (this.arena.getTeamBLoadout() != null)
+					UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamBLoadout() + " " + player.getName());
+			}).delayTicks(10).name("UltimateGames - Give Player Loadout").submit(UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
 		}
 	}
 
