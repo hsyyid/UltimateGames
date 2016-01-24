@@ -9,9 +9,11 @@ import com.google.common.collect.Sets;
 import io.github.hsyyid.ultimategames.UltimateGames;
 import io.github.hsyyid.ultimategames.arenas.UltimateGamesArena;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
@@ -188,6 +190,7 @@ public class DeathmatchMinigame implements Minigame
 
 			for (Player player : this.teamA)
 			{
+				player.offer(Keys.GAME_MODE, GameModes.SURVIVAL);
 				player.setScoreboard(scoreboard);
 				this.teamAScoreboardTeam.addMember(player.getTeamRepresentation());
 
@@ -208,6 +211,7 @@ public class DeathmatchMinigame implements Minigame
 
 			for (Player player : this.teamB)
 			{
+				player.offer(Keys.GAME_MODE, GameModes.SURVIVAL);
 				player.setScoreboard(scoreboard);
 				this.teamBScoreboardTeam.addMember(player.getTeamRepresentation());
 
