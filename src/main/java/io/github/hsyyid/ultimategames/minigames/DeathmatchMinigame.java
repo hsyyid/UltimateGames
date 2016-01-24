@@ -15,12 +15,13 @@ import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
+import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
@@ -350,11 +351,9 @@ public class DeathmatchMinigame implements Minigame
 		}
 	}
 
-	@Listener(order = Order.POST)
-	public void postPlayerRespawn(RespawnPlayerEvent event)
+	@Listener
+	public void onPlayerSpawn(SpawnEntityEvent event, @First Player player)
 	{
-		Player player = event.getTargetEntity();
-
 		if (this.teamA.contains(player))
 		{
 			if (this.arena.getTeamALoadout() != null)
