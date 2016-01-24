@@ -11,17 +11,15 @@ import io.github.hsyyid.ultimategames.arenas.UltimateGamesArena;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.EntitySnapshot;
-import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
-import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.scheduler.Scheduler;
@@ -353,29 +351,20 @@ public class DeathmatchMinigame implements Minigame
 		}
 	}
 
-	@Listener
-	public void onPlayerSpawn(SpawnEntityEvent event)
+	@Listener(order = Order.LAST)
+	public void afterPlayerRespawn(RespawnPlayerEvent event)
 	{
-		for (EntitySnapshot entitySnapshot : event.getEntitySnapshots())
+		Player player = event.getTargetEntity();
+
+		if (this.teamA.contains(player))
 		{
-			if (entitySnapshot.getType() == EntityTypes.PLAYER)
-			{
-				if (Sponge.getServer().getPlayer(entitySnapshot.getUniqueId().get()).isPresent())
-				{
-					Player player = Sponge.getServer().getPlayer(entitySnapshot.getUniqueId().get()).get();
-					
-					if (this.teamA.contains(player))
-					{
-						if (this.arena.getTeamALoadout() != null)
-							UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamALoadout() + " " + player.getName());
-					}
-					else if (this.teamB.contains(player))
-					{
-						if (this.arena.getTeamBLoadout() != null)
-							UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamBLoadout() + " " + player.getName());
-					}
-				}
-			}
+			if (this.arena.getTeamALoadout() != null)
+				UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamALoadout() + " " + player.getName());
+		}
+		else if (this.teamB.contains(player))
+		{
+			if (this.arena.getTeamBLoadout() != null)
+				UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamBLoadout() + " " + player.getName());
 		}
 	}
 
@@ -384,22 +373,15 @@ public class DeathmatchMinigame implements Minigame
 	{
 		if (players().contains(event.getTargetEntity()))
 		{
-			for (Player player : this.teamA)
+			if (this.teamA.contains(event.getTargetEntity()))
 			{
-				if (player.getUniqueId().equals(event.getTargetEntity().getUniqueId()))
-				{
-					this.teamA.remove(event.getTargetEntity().getUniqueId());
-					event.getTargetEntity().setLocation(this.arena.getSpawn().getLocation());
-				}
+				this.teamA.remove(event.getTargetEntity().getUniqueId());
+				event.getTargetEntity().setLocation(this.arena.getSpawn().getLocation());
 			}
-
-			for (Player player : this.teamB)
+			else if (this.teamB.contains(event.getTargetEntity()))
 			{
-				if (player.getUniqueId().equals(event.getTargetEntity().getUniqueId()))
-				{
-					this.teamB.remove(event.getTargetEntity().getUniqueId());
-					event.getTargetEntity().setLocation(this.arena.getSpawn().getLocation());
-				}
+				this.teamB.remove(event.getTargetEntity().getUniqueId());
+				event.getTargetEntity().setLocation(this.arena.getSpawn().getLocation());
 			}
 		}
 	}

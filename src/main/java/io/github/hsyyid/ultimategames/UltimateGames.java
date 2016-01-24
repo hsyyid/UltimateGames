@@ -93,7 +93,7 @@ public class UltimateGames
 		
 		subcommands.put(Arrays.asList("create"), CommandSpec.builder()
 			.description(Text.of("Create Arena Command"))
-			.permission("ultimategames.create.command")
+			.permission("ultimategames.command.create")
 			.arguments(GenericArguments.seq(GenericArguments.onlyOne(
 				GenericArguments.string(Text.of("type"))),
 				GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))), 
@@ -104,35 +104,35 @@ public class UltimateGames
 
 		subcommands.put(Arrays.asList("delete", "remove"), CommandSpec.builder()
 			.description(Text.of("Remove Arena Command"))
-			.permission("ultimategames.remove.command")
+			.permission("ultimategames.command.remove")
 			.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
 			.executor(new DeleteArenaExecutor())
 			.build());
 
 		subcommands.put(Arrays.asList("setteamspawn"), CommandSpec.builder()
 			.description(Text.of("Set Team Spawn Command"))
-			.permission("ultimategames.teamspawn.set.command")
+			.permission("ultimategames.command.teamspawn.set")
 			.arguments(GenericArguments.seq(GenericArguments.onlyOne(GenericArguments.string(Text.of("arena"))), GenericArguments.onlyOne(GenericArguments.string(Text.of("team")))))
 			.executor(new SetTeamSpawnExecutor())
 			.build());
 
 		subcommands.put(Arrays.asList("setspectatorspawn"), CommandSpec.builder()
 			.description(Text.of("Set Spectator Spawn Command"))
-			.permission("ultimategames.spectatorspawn.set.command")
+			.permission("ultimategames.command.spectatorspawn.set")
 			.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("arena"))))
 			.executor(new SetSpectatorSpawnExecutor())
 			.build());
 
 		subcommands.put(Arrays.asList("setteamloadout"), CommandSpec.builder()
 			.description(Text.of("Set Team Loadout Command"))
-			.permission("ultimategames.teamloadout.set.command")
+			.permission("ultimategames.command.teamloadout.set")
 			.arguments(GenericArguments.seq(GenericArguments.onlyOne(GenericArguments.string(Text.of("arena"))), GenericArguments.onlyOne(GenericArguments.string(Text.of("team"))), GenericArguments.onlyOne(GenericArguments.remainingJoinedStrings(Text.of("loadout")))))
 			.executor(new SetTeamLoadoutExecutor())
 			.build());
 
 		subcommands.put(Arrays.asList("leavegame"), CommandSpec.builder()
 			.description(Text.of("Leave Game Command"))
-			.permission("ultimategames.leavegame.command")
+			.permission("ultimategames.command.leavegame")
 			.executor(new LeaveGameExecutor())
 			.build());
 
