@@ -243,7 +243,7 @@ public class DeathmatchMinigame implements Minigame
 				{
 					System.out.println("[UltimateGames]: Error when ending deathmatch in arena " + arena.getName());
 				}
-			}).delay(1, TimeUnit.MINUTES).name("UltimateGames - End Deathmatch").submit(UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
+			}).delay(this.arena.getLength(), TimeUnit.MINUTES).name("UltimateGames - End Deathmatch").submit(UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
 		}
 	}
 

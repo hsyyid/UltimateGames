@@ -10,11 +10,13 @@ public class UltimateGamesArena extends Arena
 	private String teamALoadout;
 	private String teamBLoadout;
 	private int teamSize;
+	private int length;
 
-	public UltimateGamesArena(String name, SpawnPoint spawn, int teamSize)
+	public UltimateGamesArena(String name, SpawnPoint spawn, int teamSize, int length)
 	{
 		super(name, spawn);
 		this.teamSize = teamSize;
+		this.length = length;
 	}
 
 	public void setTeamASpawn(SpawnPoint teamASpawn)
@@ -41,6 +43,11 @@ public class UltimateGamesArena extends Arena
 	{
 		this.teamSize = teamSize;
 	}
+	
+	public void setLength(int length)
+	{
+		this.length = length;
+	}
 
 	public SpawnPoint getTeamASpawn()
 	{
@@ -65,5 +72,10 @@ public class UltimateGamesArena extends Arena
 	public int getTeamSize()
 	{
 		return teamSize;
+	}
+	
+	public int getLength()
+	{
+		return length;
 	}
 }

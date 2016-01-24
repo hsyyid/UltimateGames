@@ -92,7 +92,11 @@ public class UltimateGames
 		subcommands.put(Arrays.asList("create"), CommandSpec.builder()
 			.description(Text.of("Create Arena Command"))
 			.permission("ultimategames.command.create")
-			.arguments(GenericArguments.seq(GenericArguments.onlyOne(GenericArguments.string(Text.of("type"))), GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))), GenericArguments.onlyOne(GenericArguments.integer(Text.of("team size")))))
+			.arguments(GenericArguments.seq(GenericArguments.onlyOne(
+				GenericArguments.string(Text.of("type"))),
+				GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))), 
+				GenericArguments.onlyOne(GenericArguments.integer(Text.of("team size"))),
+				GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.integer(Text.of("length"))))))
 			.executor(new CreateArenaExecutor())
 			.build());
 

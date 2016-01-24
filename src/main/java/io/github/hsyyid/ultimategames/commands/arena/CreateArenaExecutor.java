@@ -20,6 +20,7 @@ public class CreateArenaExecutor implements CommandExecutor
 		String type = ctx.<String> getOne("type").get();
 		String name = ctx.<String> getOne("name").get();
 		int teamSize = ctx.<Integer> getOne("team size").get();
+		int length = ctx.<Integer> getOne("length").orElse(5);
 
 		if (src instanceof Player)
 		{
@@ -34,7 +35,7 @@ public class CreateArenaExecutor implements CommandExecutor
 
 			if (type.equalsIgnoreCase("Deathmatch") || type.equalsIgnoreCase("dm"))
 			{
-				UltimateGamesArena arena = new UltimateGamesArena(name, spawnpoint, teamSize);
+				UltimateGamesArena arena = new UltimateGamesArena(name, spawnpoint, teamSize, length);
 				UltimateGames.arenas.add(arena);
 				player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GREEN, "Created deathmatch arena. Spawn set to your current location!"));
 				player.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.RED, "Do not forget to set spawns for both team a and b!"));
