@@ -30,6 +30,7 @@ import org.spongepowered.api.scoreboard.displayslot.DisplaySlots;
 import org.spongepowered.api.scoreboard.objective.Objective;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,8 +46,8 @@ public class DeathmatchMinigame implements Minigame
 	private int teamBPoints;
 
 	private Scoreboard scoreboard;
-	private Team teamAScoreTeam;
-	private Team teamBScoreTeam;
+	private Team teamAScoreboardTeam;
+	private Team teamBScoreboardTeam;
 
 	/**
 	 * Creates a new DeathmatchMinigame instance.
@@ -64,41 +65,61 @@ public class DeathmatchMinigame implements Minigame
 
 		Objective.Builder objectiveBuilder = Sponge.getRegistry().createBuilder(Objective.Builder.class);
 
-		Text title = Text.of(TextColors.BLUE, "Arena: ", TextColors.GRAY, arena.getName());
-		final Objective mainObjective = objectiveBuilder.name("<Arena Scoreboard>").criterion(Criteria.DUMMY).displayName(title).build();
+		Text title = Text.of(TextColors.AQUA, "UltimateGames");
+		final Objective mainObjective = objectiveBuilder.name("<Arena>").criterion(Criteria.DUMMY).displayName(title).build();
 
-		Score teamAScore = mainObjective.getOrCreateScore(Text.of(TextColors.BLUE, "Team A: "));
-		teamAScore.setScore(10);
+		Score teamAName = mainObjective.getOrCreateScore(Text.of(TextColors.BLUE, TextStyles.BOLD, "Team A"));
+		teamAName.setScore(4);
 
-		this.teamAScoreTeam = Team.builder()
+		this.teamAScoreboardTeam = Team.builder()
 			.name("TeamA")
 			.displayName(Text.of("TeamA"))
 			.prefix(Text.of(TextColors.BLUE))
-			.members(Sets.newHashSet(Text.of(TextColors.BLUE, "Team A: ")))
 			.nameTagVisibility(Visibilities.ALL)
 			.canSeeFriendlyInvisibles(true)
 			.allowFriendlyFire(false)
+			.members(Sets.newHashSet(Text.of(TextColors.BLUE, TextStyles.BOLD, "Team A")))
 			.build();
 
-		Score teamBScore = mainObjective.getOrCreateScore(Text.of(TextColors.RED, "Team B: "));
-		teamBScore.setScore(8);
+		Score teamAScore = mainObjective.getOrCreateScore(Text.of(TextColors.BLUE, "Kills: "));
+		teamAScore.setScore(3);
 
-		this.teamBScoreTeam = Team.builder()
+		Team teamAScoreTeam = Team.builder()
+			.name("TeamAScore")
+			.displayName(Text.of("TeamAScore"))
+			.members(Sets.newHashSet(Text.of(TextColors.BLUE, "Kills: ")))
+			.build();
+
+		Score teamBName = mainObjective.getOrCreateScore(Text.of(TextColors.RED, TextStyles.BOLD, "Team B"));
+		teamBName.setScore(2);
+
+		this.teamBScoreboardTeam = Team.builder()
 			.name("TeamB")
 			.displayName(Text.of("TeamB"))
 			.prefix(Text.of(TextColors.RED))
-			.members(Sets.newHashSet(Text.of(TextColors.RED, "Team B: ")))
 			.nameTagVisibility(Visibilities.ALL)
 			.canSeeFriendlyInvisibles(true)
 			.allowFriendlyFire(false)
+			.members(Sets.newHashSet(Text.of(TextColors.RED, TextStyles.BOLD, "Team B")))
+			.build();
+		
+		Score teamBScore = mainObjective.getOrCreateScore(Text.of(TextColors.RED, "Kills: "));
+		teamBScore.setScore(1);
+
+		Team teamBScoreTeam = Team.builder()
+			.name("TeamBScore")
+			.displayName(Text.of("TeamBScore"))
+			.members(Sets.newHashSet(Text.of(TextColors.RED, "Kills: ")))
 			.build();
 
 		List<Objective> objectives = new ArrayList<Objective>();
 		objectives.add(mainObjective);
 
 		scoreboard = Scoreboard.builder().objectives(objectives).build();
-		scoreboard.registerTeam(this.teamAScoreTeam);
-		scoreboard.registerTeam(this.teamBScoreTeam);
+		scoreboard.registerTeam(this.teamAScoreboardTeam);
+		scoreboard.registerTeam(teamAScoreTeam);
+		scoreboard.registerTeam(this.teamBScoreboardTeam);
+		scoreboard.registerTeam(teamBScoreTeam);
 		scoreboard.updateDisplaySlot(mainObjective, DisplaySlots.SIDEBAR);
 
 		Scheduler scheduler = Sponge.getScheduler();
@@ -106,8 +127,8 @@ public class DeathmatchMinigame implements Minigame
 		scheduler.createTaskBuilder().execute(() -> {
 			try
 			{
-				this.teamAScoreTeam.setSuffix(Text.of(TextColors.GRAY, teamAPoints));
-				this.teamBScoreTeam.setSuffix(Text.of(TextColors.GRAY, teamBPoints));
+				teamAScoreTeam.setSuffix(Text.of(TextColors.GRAY, teamAPoints));
+				teamBScoreTeam.setSuffix(Text.of(TextColors.GRAY, teamBPoints));
 			}
 			catch (Exception e)
 			{
@@ -167,7 +188,7 @@ public class DeathmatchMinigame implements Minigame
 			for (Player player : this.teamA)
 			{
 				player.setScoreboard(scoreboard);
-				this.teamAScoreTeam.addMember(player.getTeamRepresentation());
+				this.teamAScoreboardTeam.addMember(player.getTeamRepresentation());
 
 				if (this.arena.getTeamALoadout() != null)
 					UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamALoadout() + " " + player.getName());
@@ -187,7 +208,7 @@ public class DeathmatchMinigame implements Minigame
 			for (Player player : this.teamB)
 			{
 				player.setScoreboard(scoreboard);
-				this.teamBScoreTeam.addMember(player.getTeamRepresentation());
+				this.teamBScoreboardTeam.addMember(player.getTeamRepresentation());
 
 				if (this.arena.getTeamBLoadout() != null)
 					UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamBLoadout() + " " + player.getName());
