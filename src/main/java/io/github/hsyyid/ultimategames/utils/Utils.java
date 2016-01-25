@@ -102,8 +102,15 @@ public class Utils
 					{
 						SignData data = optionalSignData.get();
 						data = data.set(data.getValue(Keys.SIGN_LINES).get().set(2, Text.of(TextColors.GREEN, "Mini-game in progress.")));
-						data = data.set(data.getValue(Keys.SIGN_LINES).get().set(3, Text.of(TextColors.GRAY, "Right-click to spectate!")));
+						data = data.set(data.getValue(Keys.SIGN_LINES).get().set(3, Text.of(TextColors.GOLD, "Click to spectate!")));
 						tileEntity.offer(data);
+					}
+				}
+				else
+				{
+					for (Task task : Sponge.getScheduler().getTasksByName("UltimateGames - Update UltimateGamesSign " + gameSign.getUuid()))
+					{
+						task.cancel();
 					}
 				}
 			}
