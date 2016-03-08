@@ -136,7 +136,7 @@ public class DeathmatchMinigame implements Minigame
 			{
 				e.printStackTrace();
 			}
-		}).interval(1, TimeUnit.MILLISECONDS).name("UltimateGames - Update scoreboard").submit(Sponge.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
+		}).interval(1, TimeUnit.MILLISECONDS).name("UltimateGames - Update scoreboard").submit(Sponge.getPluginManager().getPlugin("io.github.hsyyid.ultimategames").get().getInstance().get());
 
 		Ember.register(arena, this);
 	}

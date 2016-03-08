@@ -13,7 +13,7 @@ public class UltimateGamesExecutor implements CommandExecutor
 {
 	public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException
 	{
-		src.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GRAY, "Version: ", TextColors.GOLD, UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getVersion()));
+		src.sendMessage(Text.of(TextColors.BLUE, "[UltimateGames]: ", TextColors.GRAY, "Version: ", TextColors.GOLD, UltimateGames.game.getPluginManager().getPlugin("io.github.hsyyid.ultimategame").get().getVersion()));
 		return CommandResult.success();
 	}
 }

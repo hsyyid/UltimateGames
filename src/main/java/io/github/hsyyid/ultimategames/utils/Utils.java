@@ -121,6 +121,6 @@ public class Utils
 					task.cancel();
 				}
 			}
-		}).interval(1, TimeUnit.MILLISECONDS).name("UltimateGames - Update UltimateGamesSign " + gameSign.getUuid()).submit(UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
+		}).interval(1, TimeUnit.MILLISECONDS).name("UltimateGames - Update UltimateGamesSign " + gameSign.getUuid()).submit(UltimateGames.game.getPluginManager().getPlugin("io.github.hsyyid.ultimategames").get().getInstance().get());
 	}
 }

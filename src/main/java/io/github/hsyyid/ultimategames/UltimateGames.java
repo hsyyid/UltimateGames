@@ -31,6 +31,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppedServerEvent;
+import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 
@@ -40,7 +41,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-@Plugin(id = "UltimateGames", name = "UltimateGames", version = "0.3", dependencies = "required-after:EMBER")
+@Plugin(id = "io.github.hsyyid.ultimategames", name = "UltimateGames", version = "0.4", description = "UltimateGames is a plugin that adds minigames to your server, and is customizable by server admins.", dependencies = @Dependency(id = "com.dracade.ember", version = "1.0", optional = true) )
 public class UltimateGames
 {
 	public static Game game;
@@ -90,15 +91,11 @@ public class UltimateGames
 		}
 
 		HashMap<List<String>, CommandSpec> subcommands = new HashMap<List<String>, CommandSpec>();
-		
+
 		subcommands.put(Arrays.asList("create"), CommandSpec.builder()
 			.description(Text.of("Create Arena Command"))
 			.permission("ultimategames.command.create")
-			.arguments(GenericArguments.seq(GenericArguments.onlyOne(
-				GenericArguments.string(Text.of("type"))),
-				GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))), 
-				GenericArguments.onlyOne(GenericArguments.integer(Text.of("team size"))),
-				GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.integer(Text.of("length"))))))
+			.arguments(GenericArguments.seq(GenericArguments.onlyOne(GenericArguments.string(Text.of("type"))), GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))), GenericArguments.onlyOne(GenericArguments.integer(Text.of("team size"))), GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.integer(Text.of("length"))))))
 			.executor(new CreateArenaExecutor())
 			.build());
 
