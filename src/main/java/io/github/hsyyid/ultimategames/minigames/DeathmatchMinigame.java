@@ -241,7 +241,7 @@ public class DeathmatchMinigame implements Minigame
 				{
 					System.out.println("[UltimateGames]: Error when ending deathmatch in arena " + arena.getName());
 				}
-			}).delay(this.arena.getLength(), TimeUnit.MINUTES).name("UltimateGames - End Deathmatch").submit(UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
+			}).delay(this.arena.getLength(), TimeUnit.MINUTES).name("UltimateGames - End Deathmatch").submit(UltimateGames.game.getPluginManager().getPlugin("io.github.hsyyid.ultimategames").get().getInstance().get());
 		}
 	}
 
@@ -347,7 +347,7 @@ public class DeathmatchMinigame implements Minigame
 			Sponge.getScheduler().createTaskBuilder().execute(() -> {
 				if (this.arena.getTeamALoadout() != null)
 					UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamALoadout() + " " + player.getName());
-			}).delayTicks(10).name("UltimateGames - Give Player Loadout").submit(UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
+			}).delayTicks(10).name("UltimateGames - Give Player Loadout").submit(UltimateGames.game.getPluginManager().getPlugin("io.github.hsyyid.ultimategames").get().getInstance().get());
 		}
 		else if (this.teamB.contains(player))
 		{
@@ -356,7 +356,7 @@ public class DeathmatchMinigame implements Minigame
 			Sponge.getScheduler().createTaskBuilder().execute(() -> {
 				if (this.arena.getTeamBLoadout() != null)
 					UltimateGames.game.getCommandManager().process(Sponge.getServer().getConsole(), "kit " + this.arena.getTeamBLoadout() + " " + player.getName());
-			}).delayTicks(10).name("UltimateGames - Give Player Loadout").submit(UltimateGames.game.getPluginManager().getPlugin("UltimateGames").get().getInstance().get());
+			}).delayTicks(10).name("UltimateGames - Give Player Loadout").submit(UltimateGames.game.getPluginManager().getPlugin("io.github.hsyyid.ultimategames").get().getInstance().get());
 		}
 	}
 
